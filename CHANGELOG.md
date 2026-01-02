@@ -7,12 +7,12 @@ Semua perubahan penting untuk project ini akan dicatat di sini.
 - Beranda: search + filter (Genre/Tipe/Status).
 - Tampilan per bab: Serial dan Film.
 - Mode preview per bab max 3 baris + tombol "Lihat lainnya" di kanan.
-- Scrollbar yang lebih elegan dan nyatu tema.
+- Scrollbar theme (Firefox + WebKit).
 
 ### Changed
 - Layout filter dibuat lebih efisien: filter di kiri (digroup), search di kanan.
 - Header beranda dan halaman anime diseragamkan.
-- Font diseragamkan melalui style global.
+- Font diseragamkan melalui style global (hapus override per-halaman).
 
 ### Notes
-- Disarankan jalanin via server lokal (untuk menghindari pembatasan `fetch()` saat `file://`).
+- Disarankan jalanin via server lokal untuk menghindari pembatasan `fetch()` saat `file://`.
