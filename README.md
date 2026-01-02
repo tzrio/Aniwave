@@ -2,6 +2,17 @@
 
 Web simpel buat lihat daftar anime + halaman detail.
 
+**Tags:** `static-site` `html` `css` `javascript` `anime` `filter` `github-pages`
+
+**Release:** `v1.0.0` (lihat [CHANGELOG.md](CHANGELOG.md) dan tab **Releases** di GitHub)
+
+## Daftar Isi
+- [Fitur](#fitur)
+- [Cara Menjalankan](#cara-menjalankan)
+- [Update Terbaru (Jan 2026)](#update-terbaru-jan-2026)
+- [Struktur & File Penting](#struktur--file-penting)
+- [Upload ke GitHub (GitHub Pages)](#upload-ke-github-github-pages)
+
 ## Fitur
 - Beranda: search + filter (Genre/Tipe/Status)
 - Tampilan per bab: **Serial** dan **Film**
@@ -43,6 +54,7 @@ Kalau `fetch()` gagal, otomatis pakai data cadangan [data/anime-data.js](data/an
 - CSS global (header + background + font + scrollbar): [assets/css/global.css](assets/css/global.css)
 - CSS beranda: [assets/css/beranda.css](assets/css/beranda.css)
 - CSS detail: [assets/css/hiasan.css](assets/css/hiasan.css)
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
 
 ## Upload ke GitHub (GitHub Pages)
 1. Push repo ini ke GitHub.
