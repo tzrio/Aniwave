@@ -1,3 +1,7 @@
+/*
+    AniWave - Detail Styles
+    Styling khusus halaman detail: kartu, tabel info, dan tata letak detail.
+*/
 body {
     color: var(--text);
 }

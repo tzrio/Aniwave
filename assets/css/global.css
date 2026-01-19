@@ -1,3 +1,7 @@
+/*
+  AniWave - Global Styles
+  Styling umum: font, layout dasar, header, scrollbar, dan tema warna.
+*/
 :root {
   --primary: red;
   --bg: #ffffff;

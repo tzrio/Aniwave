@@ -37,7 +37,6 @@ Lalu buka: `http://localhost:5174/index.html`
 
 ### Tetap bisa tanpa server
 Kalau dibuka langsung (double click `index.html`), web akan coba load data dari [data/anime.json](data/anime.json).
-Kalau `fetch()` gagal, otomatis pakai data cadangan [data/anime-data.js](data/anime-data.js).
 
 ## Update Terbaru (Jan 2026)
 - Per bab (Serial/Film) kartu dibatasi max **3 baris** saat mode default + tombol **Lihat lainnya** di pojok kanan bab.
@@ -50,11 +49,31 @@ Kalau `fetch()` gagal, otomatis pakai data cadangan [data/anime-data.js](data/an
 - Beranda: [index.html](index.html)
 - Detail: [anime.html](anime.html)
 - Data utama: [data/anime.json](data/anime.json)
-- Data cadangan (offline): [data/anime-data.js](data/anime-data.js)
 - CSS global (header + background + font + scrollbar): [assets/css/global.css](assets/css/global.css)
 - CSS beranda: [assets/css/beranda.css](assets/css/beranda.css)
 - CSS detail: [assets/css/hiasan.css](assets/css/hiasan.css)
+- Modul fetch data: [assets/js/fetchAnime.js](assets/js/fetchAnime.js)
+- Modul filter: [assets/js/filterAnime.js](assets/js/filterAnime.js)
+- Modul render: [assets/js/renderAnime.js](assets/js/renderAnime.js)
+- Entrypoint beranda: [assets/js/beranda.js](assets/js/beranda.js)
+- Entrypoint detail: [assets/js/anime.js](assets/js/anime.js)
+- Utilitas umum: [assets/js/utils.js](assets/js/utils.js)
 - Changelog: [CHANGELOG.md](CHANGELOG.md)
+
+## Dokumentasi Modul
+### Alur Data
+1. Beranda: `beranda.js` memanggil `fetchAnimeData()` → `collectFilterOptions()` → `renderAnimeList()`.
+2. Detail: `anime.js` memanggil `fetchAnimeData()` → `renderSynopsis()` + `renderInfo()` + `renderDownloads()`.
+
+### Kontrak Data (Ringkas)
+- `title`: string
+- `cover`: string (path image)
+- `sinopsis`: array of string
+- `info`: object (mis. `Tipe`, `Status`, `Tahun`, `Genre`)
+- `downloads`: array of group `{ episode, rows[] }`
+
+### Catatan JSON
+Semua data anime **wajib** berasal dari [data/anime.json](data/anime.json). Tidak ada data anime di HTML/JS.
 
 ## Upload ke GitHub (GitHub Pages)
 1. Push repo ini ke GitHub.
