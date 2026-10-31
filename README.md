@@ -1,85 +1,57 @@
-# Web Anime (Aniwave)
+# Aniwave (v2.0.0 Production Edition)
 
-Web simpel buat lihat daftar anime + halaman detail.
+Platform penemuan katalog anime modern, cepat, dan siap komersial (White-Label Ready).
 
-**Tags:** `static-site` `html` `css` `javascript` `anime` `filter` `github-pages`
+**Brand Asli:** TzRIO  
+**Versi:** `v2.0.0` (Production & Commercial Release)  
+**Demo / URL:** https://tzrio.github.io/Aniwave
 
-**Release:** `v1.0.0` (lihat [CHANGELOG.md](CHANGELOG.md) dan tab **Releases** di GitHub)
+---
 
-## Daftar Isi
-- [Fitur](#fitur)
-- [Cara Menjalankan](#cara-menjalankan)
-- [Update Terbaru (Jan 2026)](#update-terbaru-jan-2026)
-- [Struktur & File Penting](#struktur--file-penting)
-- [Upload ke GitHub (GitHub Pages)](#upload-ke-github-github-pages)
+## Fitur Utama
 
-## Fitur
-- Beranda: search + filter (Genre/Tipe/Status)
-- Tampilan per bab: **Serial** dan **Film**
-- Preview list per bab max **3 baris** (mode default), ada tombol **Lihat lainnya** di kanan
-- Halaman detail: sinopsis, info, dan tabel unduhan
-- UI konsisten: header seragam, font seragam, scrollbar nyatu tema
+- 🎨 **Modern Dark/Light UI/UX**: Sistem token desain adaptif dengan transisi tema halus dan shimmer skeleton loader.
+- 🎬 **Hero Showcase & Trailer**: Banner unggulan anime dengan pemutar trailer YouTube resmi di modal terisolasi.
+- 🔍 **Pencarian & Multi-Filter Canggih**: Cari berdasarkan judul, judul alternatif, genre dinamis, format (Serial/Film), status tayang, serta sorting (Rating, Rilis, Alfabet).
+- 📌 **Watchlist Personal**: Simpan anime favorit ke daftar pantau (*Plan to Watch*, *Watching*, *Completed*) tanpa wajib login.
+- 🔒 **Sistem Autentikasi Pengguna**: Modal login/registrasi modern, dukungan sesi pengguna, dan kontrol akses berbasis peran (RBAC).
+- 🛠️ **Admin Dashboard (`admin.html`)**: CRUD anime lengkap (Tambah, Edit, Hapus) dengan fitur **Ekspor/Impor JSON** instan.
+- 🛡️ **Kepatuhan Hak Cipta & Legalitas**: Bersih dari link unduhan ilegal; terhubung langsung ke mitra berlisensi resmi (Crunchyroll, Netflix, Bilibili, Muse Asia).
+- 🚀 **SEO & Structured Data**: Dukungan OpenGraph, Twitter Cards, dan Schema.org JSON-LD (`TVSeries` / `Movie`) teruji.
+- 📦 **White-Label Architecture**: Kustomisasi nama merek, slogan, logo, dan skema warna terpusat di `assets/js/config.js` dan `assets/css/theme.css`.
 
-## Cara Menjalankan
+---
 
-### Direkomendasikan (pakai server lokal)
-Karena browser sering membatasi `fetch()` saat dibuka via `file://`, paling aman jalankan pakai server lokal.
+## Panduan Cepat Menjalankan
 
-**Opsi A (Python)**
+Jalankan server statis lokal di root folder:
+
 ```bash
-cd "Web Anime"
-python -m http.server 5174
+# Menggunakan Python 3
+python3 -m http.server 8000
 ```
-Lalu buka: `http://localhost:5174/index.html`
+Buka browser Anda di `http://localhost:8000`.
 
-**Opsi B (VS Code Live Server)**
-- Klik kanan `index.html` → **Open with Live Server**
+Untuk kredensial default Administrator:
+- **Username:** `admin` (atau `admin@aniwave.local`)
+- **Password:** `admin123`
 
-### Tetap bisa tanpa server
-Kalau dibuka langsung (double click `index.html`), web akan coba load data dari [data/anime.json](data/anime.json).
+---
 
-## Update Terbaru (Jan 2026)
-- Per bab (Serial/Film) kartu dibatasi max **3 baris** saat mode default + tombol **Lihat lainnya** di pojok kanan bab.
-- Layout filter lebih efisien: **filter di kiri** (digroup), **search di kanan**.
-- Scrollbar dibuat lebih elegan dan sesuai tema.
-- Header beranda dan page anime disamakan.
-- Font diseragamkan via global style (nggak ada lagi override font halaman tertentu).
+## Dokumentasi Lengkap
 
-## Struktur & File Penting
-- Beranda: [index.html](index.html)
-- Detail: [anime.html](anime.html)
-- Data utama: [data/anime.json](data/anime.json)
-- CSS global (header + background + font + scrollbar): [assets/css/global.css](assets/css/global.css)
-- CSS beranda: [assets/css/beranda.css](assets/css/beranda.css)
-- CSS detail: [assets/css/hiasan.css](assets/css/hiasan.css)
-- Modul fetch data: [assets/js/fetchAnime.js](assets/js/fetchAnime.js)
-- Modul filter: [assets/js/filterAnime.js](assets/js/filterAnime.js)
-- Modul render: [assets/js/renderAnime.js](assets/js/renderAnime.js)
-- Entrypoint beranda: [assets/js/beranda.js](assets/js/beranda.js)
-- Entrypoint detail: [assets/js/anime.js](assets/js/anime.js)
-- Utilitas umum: [assets/js/utils.js](assets/js/utils.js)
-- Changelog: [CHANGELOG.md](CHANGELOG.md)
+1. [Technical Audit (docs/TECHNICAL_AUDIT.md)](docs/TECHNICAL_AUDIT.md)
+2. [Arsitektur Sistem (docs/ARCHITECTURE.md)](docs/ARCHITECTURE.md)
+3. [Panduan Administrator (docs/ADMIN_GUIDE.md)](docs/ADMIN_GUIDE.md)
+4. [Panduan Serah Terima Komersial / White-Label (docs/COMMERCIAL_HANDOVER.md)](docs/COMMERCIAL_HANDOVER.md)
+5. [Panduan Instalasi & Deployment (docs/DEPLOYMENT.md)](docs/DEPLOYMENT.md)
 
-## Dokumentasi Modul
-### Alur Data
-1. Beranda: `beranda.js` memanggil `fetchAnimeData()` → `collectFilterOptions()` → `renderAnimeList()`.
-2. Detail: `anime.js` memanggil `fetchAnimeData()` → `renderSynopsis()` + `renderInfo()` + `renderDownloads()`.
+---
 
-### Kontrak Data (Ringkas)
-- `title`: string
-- `cover`: string (path image)
-- `sinopsis`: array of string
-- `info`: object (mis. `Tipe`, `Status`, `Tahun`, `Genre`)
-- `downloads`: array of group `{ episode, rows[] }`
+## Menjalankan Unit & Integrity Test
 
-### Catatan JSON
-Semua data anime **wajib** berasal dari [data/anime.json](data/anime.json). Tidak ada data anime di HTML/JS.
+Verifikasi integritas skema data dan ketersediaan modul dengan menjalankan:
 
-## Upload ke GitHub (GitHub Pages)
-1. Push repo ini ke GitHub.
-2. Buka **Settings → Pages**.
-3. Pilih **Deploy from a branch**.
-4. Pilih branch (mis. `main`) dan folder **/** (root).
-5. Setelah live, akses halaman utama dari `.../index.html`.
-
-Catatan: karena ini static site, tidak perlu build step.
+```bash
+node tests/test_suite.js
+```

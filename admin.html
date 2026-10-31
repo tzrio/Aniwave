@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard — Aniwave</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="stylesheet" type="text/css" href="assets/css/theme.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="app-container">
+      <nav class="nav-bar">
+        <a class="nav-brand" href="index.html">
+          <span class="nav-brand-badge">
+            <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" />
+            <span>Aniwave Admin</span>
+          </span>
+        </a>
+
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Lihat Website</a>
+        </div>
+
+        <div class="nav-actions">
+          <button id="theme-toggle" class="btn-icon" type="button" aria-label="Ganti Tema">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+            </svg>
+          </button>
+          <div id="nav-auth-container"></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Konten Admin -->
+  <main class="app-container" style="padding-top: var(--space-xl); padding-bottom: var(--space-2xl);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-lg); flex-wrap:wrap; gap:16px;">
+      <div>
+        <h1 style="font-size:1.8rem; font-weight:900;">Manajemen Katalog Anime</h1>
+        <p style="color:var(--color-text-muted); font-size:0.9rem;">Tambah, perbarui metadata, ekspor, dan kelola basis data anime secara langsung.</p>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="btn-export-json" class="btn-secondary" type="button">⬇ Ekspor JSON</button>
+        <button id="btn-import-json" class="btn-secondary" type="button">⬆ Impor JSON</button>
+        <button id="btn-new-anime" class="btn-primary" type="button">+ Tambah Anime Baru</button>
+      </div>
+    </div>
+
+    <!-- Statistik Ringkas -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:var(--space-xl);">
+      <div style="background:var(--color-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">TOTAL ANIME</span>
+        <div id="stat-total" style="font-size:1.8rem; font-weight:900; color:var(--color-primary); margin-top:4px;">0</div>
+      </div>
+      <div style="background:var(--color-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">SERIAL TV</span>
+        <div id="stat-series" style="font-size:1.8rem; font-weight:900; color:var(--color-text-main); margin-top:4px;">0</div>
+      </div>
+      <div style="background:var(--color-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">FILM / MOVIE</span>
+        <div id="stat-movies" style="font-size:1.8rem; font-weight:900; color:var(--color-text-main); margin-top:4px;">0</div>
+      </div>
+      <div style="background:var(--color-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">STATUS SISTEM</span>
+        <div style="font-size:1.1rem; font-weight:800; color:var(--color-success); margin-top:8px;">● Operational Ready</div>
+      </div>
+    </div>
+
+    <!-- Tabel Daftar Anime -->
+    <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden;">
+      <table style="width:100%; border-collapse:collapse; text-align:left;">
+        <thead>
+          <tr style="background:var(--color-bg-secondary); border-bottom:1px solid var(--color-border); font-size:0.85rem; color:var(--color-text-muted);">
+            <th style="padding:14px 16px;">POSTER & JUDUL</th>
+            <th style="padding:14px 16px;">TIPE</th>
+            <th style="padding:14px 16px;">TAHUN</th>
+            <th style="padding:14px 16px;">STUDIO</th>
+            <th style="padding:14px 16px;">RATING</th>
+            <th style="padding:14px 16px; text-align:right;">AKSI</th>
+          </tr>
+        </thead>
+        <tbody id="admin-anime-table">
+          <tr>
+            <td colspan="6" style="padding:24px; text-align:center; color:var(--color-text-muted);">Memuat basis data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Form Tambah / Edit Anime -->
+  <div id="anime-form-modal" class="modal-backdrop">
+    <div class="modal-card modal-card-wide" style="max-height:90vh; overflow-y:auto;">
+      <button class="modal-close" id="anime-form-close">&times;</button>
+      <h2 id="form-modal-title" style="font-size:1.4rem; font-weight:800; margin-bottom:16px;">Tambah / Edit Anime</h2>
+
+      <form id="anime-record-form">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="form-id">ID Slug (Unik, mis. drs-s1)</label>
+            <input class="form-input" id="form-id" type="text" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="form-title">Judul Utama</label>
+            <input class="form-input" id="form-title" type="text" required />
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="form-type">Format / Tipe</label>
+            <select class="form-input" id="form-type">
+              <option value="Serial">Serial</option>
+              <option value="Film">Film</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="form-score">Rating / Skor (1-10)</label>
+            <input class="form-input" id="form-score" type="number" step="0.01" min="1" max="10" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="form-year">Tahun Rilis</label>
+            <input class="form-input" id="form-year" type="number" min="1960" max="2035" />
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="form-studio">Studio Animasi</label>
+            <input class="form-input" id="form-studio" type="text" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="form-status">Status Penayangan</label>
+            <select class="form-input" id="form-status">
+              <option value="finished">Tamat</option>
+              <option value="ongoing">Sedang berlangsung</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="form-cover">Path Poster Gambar (mis. assets/img/nama.jpg)</label>
+          <input class="form-input" id="form-cover" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="form-trailer">Embed URL Trailer YouTube (mis. https://www.youtube.com/embed/...)</label>
+          <input class="form-input" id="form-trailer" type="url" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="form-genres">Genre (Pisahkan dengan koma)</label>
+          <input class="form-input" id="form-genres" type="text" placeholder="Aksi, Fantasi, Shounen" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="form-synopsis">Sinopsis Lengkap</label>
+          <textarea class="form-input" id="form-synopsis" rows="4"></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
+          <button type="button" class="btn-secondary" id="form-cancel">Batal</button>
+          <button type="submit" class="btn-primary">Simpan Anime</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>

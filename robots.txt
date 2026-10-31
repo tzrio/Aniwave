@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tzrio.github.io/Aniwave/sitemap.xml

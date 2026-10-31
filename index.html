@@ -1,72 +1,209 @@
-<!--
-	AniWave - Beranda
-	Halaman utama untuk list anime dengan filter dan pencarian.
-	Data diambil dari data/anime.json melalui modul JS.
--->
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Aniwave | by TzRIO</title>
-	<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-	<link rel="stylesheet" type="text/css" href="assets/css/global.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/beranda.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aniwave — Platform Katalog & Temukan Anime Legal</title>
+  <meta name="description" content="Temukan serial dan film anime terbaik dengan info sinopsis lengkap, rating, dan tautan resmi legal streaming di Aniwave." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="stylesheet" type="text/css" href="assets/css/theme.css" />
 </head>
 <body>
-	<main class="beranda halaman">
-		<section class="header-utama" aria-label="Beranda">
-			<h1 class="header-kiri">
-				<a class="tautan-merek" href="index.html">Aniwave | by TzRIO <img class="ikon-merek" src="assets/img/tzrio-mark.svg" alt="" aria-hidden="true"></a>
-			</h1>
+  <!-- Header Navigasi Modern -->
+  <header class="site-header">
+    <div class="app-container">
+      <nav class="nav-bar" aria-label="Navigasi Utama">
+        <a class="nav-brand" href="index.html" aria-label="Beranda Aniwave">
+          <span class="nav-brand-badge">
+            <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" aria-hidden="true" />
+            <span>Aniwave</span>
+          </span>
+        </a>
 
-			<div class="logo-tengah" aria-hidden="true">
-				<span class="logo-tengah__badge">
-					<img class="logo-tengah__ikon" src="assets/img/aniwave-mark.svg" alt="">
-					<img class="logo-tengah__ikon" src="assets/img/tzrio-mark.svg" alt="">
-				</span>
-			</div>
+        <div class="nav-links">
+          <a class="nav-link active" href="index.html">Beranda</a>
+          <a class="nav-link" href="index.html#tipe=serial">Serial</a>
+          <a class="nav-link" href="index.html#tipe=film">Film</a>
+          <a class="nav-link" href="#watchlist" id="nav-link-watchlist">Watchlist Saya</a>
+        </div>
 
-			<a class="tombol-auth" href="#login" aria-label="Login atau Signup">Login / Signup</a>
-		</section>
+        <div class="nav-actions">
+          <!-- Toggle Tema Dark/Light -->
+          <button id="theme-toggle" class="btn-icon" type="button" aria-label="Ganti Tema">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
 
-		<section class="konten-beranda" aria-label="Daftar anime">
-			<div class="daftar-anime">
-				<div class="panel-filter" aria-label="Pencarian dan filter">
-					<div class="filter-kiri" aria-label="Filter">
-						<label class="label-filter sr-only" for="filter-genre">Genre</label>
-						<select id="filter-genre" class="select-filter" aria-label="Filter genre">
-							<option value="">Genre: Semua</option>
-						</select>
+          <!-- Tempat Auth (Login/Profile) -->
+          <div id="nav-auth-container"></div>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-						<label class="label-filter sr-only" for="filter-tipe">Tipe</label>
-						<select id="filter-tipe" class="select-filter" aria-label="Filter tipe">
-							<option value="">Tipe: Semua</option>
-							<option value="serial">Serial</option>
-							<option value="film">Film</option>
-						</select>
+  <!-- Konten Utama -->
+  <main class="app-container">
+    <!-- Hero Showcase Carousel / Banner -->
+    <section id="hero-showcase" class="hero-banner" aria-label="Anime Pilihan">
+      <img id="hero-bg" class="hero-backdrop" src="assets/img/aot-s4.jpg" alt="" />
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge-row">
+          <span class="badge-tag">UNGGULAN HARI INI</span>
+          <span id="hero-badge-type" class="badge-tag badge-tag-secondary">SERIAL</span>
+          <span id="hero-rating" class="badge-tag badge-tag-secondary" style="color:#facc15;">★ 8.81</span>
+        </div>
+        <h1 id="hero-title" class="hero-title">Attack On Titan: The Final Season</h1>
+        <div class="hero-meta">
+          <span id="hero-meta-year">2020</span>
+          <span>•</span>
+          <span id="hero-meta-studio">MAPPA</span>
+          <span>•</span>
+          <span id="hero-meta-ep">16 Episode</span>
+        </div>
+        <p id="hero-synopsis" class="hero-synopsis">
+          Setelah meraih kemenangan dari para titan, kebenaran di luar dinding dan identitas titan akhirnya terungkap. Waktu telah berlalu dan ancaman dari Marley terus membayangi peradaban Pulau Paradis.
+        </p>
+        <div class="hero-actions">
+          <a id="hero-cta-detail" href="anime.html#aot-s4" class="btn-primary">Lihat Detail Lengkap</a>
+          <button id="hero-btn-trailer" class="btn-secondary" type="button">Tonton Trailer</button>
+        </div>
+      </div>
+    </section>
 
-						<label class="label-filter sr-only" for="filter-status">Status</label>
-						<select id="filter-status" class="select-filter" aria-label="Filter status">
-							<option value="">Status: Semua</option>
-						</select>
+    <!-- Affiliate / Monetization Notice -->
+    <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:12px 18px; margin-bottom:var(--space-lg); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <span style="font-size:0.85rem; color:var(--color-text-muted);">
+        📺 <strong>Dukung Industri Anime:</strong> Tonton secara legal di platform resmi seperti Crunchyroll, Netflix, dan Muse Asia.
+      </span>
+      <a href="https://www.crunchyroll.com" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size:0.8rem; padding:6px 12px;">
+        Jelajahi Platform Resmi &rarr;
+      </a>
+    </div>
 
-						<button id="reset-filter" class="tombol-reset" type="button">Reset</button>
-					</div>
+    <!-- Toolbar Pencarian & Multi-Filter -->
+    <section class="toolbar-section" aria-label="Filter dan Pencarian Anime">
+      <div class="toolbar-grid">
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input id="cari-anime" class="search-input" type="search" placeholder="Cari anime, judul alternatif..." autocomplete="off" />
+        </div>
 
-					<div class="filter-kanan" aria-label="Pencarian">
-						<label class="label-filter sr-only" for="cari-anime">Cari</label>
-						<input id="cari-anime" class="input-filter" type="search" placeholder="Cari judul..." autocomplete="off" />
-					</div>
-				</div>
+        <select id="filter-genre" class="select-custom" aria-label="Pilih Genre">
+          <option value="">Semua Genre</option>
+        </select>
 
-				<ul id="daftar-anime" class="daftar-anime-list" aria-label="Daftar judul anime"></ul>
-			</div>
-			<div class="pembersih"></div>
-		</section>
-	</main>
+        <select id="filter-tipe" class="select-custom" aria-label="Pilih Format">
+          <option value="">Semua Tipe</option>
+          <option value="serial">Serial TV</option>
+          <option value="film">Film / Movie</option>
+        </select>
 
-	<script type="module" src="assets/js/beranda.js"></script>
+        <select id="filter-status" class="select-custom" aria-label="Pilih Status">
+          <option value="">Semua Status</option>
+          <option value="finished">Tamat</option>
+          <option value="ongoing">Sedang Tayang</option>
+        </select>
 
+        <select id="filter-sort" class="select-custom" aria-label="Urutkan">
+          <option value="rating-desc">Rating Tertinggi</option>
+          <option value="title-asc">Judul (A-Z)</option>
+          <option value="year-desc">Tahun Rilis Terbaru</option>
+        </select>
+
+        <button id="reset-filter" class="btn-secondary" type="button">Reset</button>
+      </div>
+    </section>
+
+    <!-- Kontainer Daftar Anime -->
+    <section aria-label="Daftar Anime">
+      <div class="section-title-row">
+        <h2 id="catalog-heading" class="section-title">Katalog Anime</h2>
+        <span id="catalog-count" style="font-size:0.85rem; color:var(--color-text-muted); font-weight:600;">Memuat...</span>
+      </div>
+
+      <div id="anime-grid" class="anime-grid" aria-live="polite">
+        <!-- Skeleton Loaders -->
+        <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
+        <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
+        <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
+        <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Video Trailer -->
+  <div id="trailer-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card modal-card-wide" style="padding:16px;">
+      <button class="modal-close" id="trailer-modal-close" aria-label="Tutup Trailer">&times;</button>
+      <div style="aspect-ratio:16/9; width:100%; margin-top:20px; border-radius:var(--radius-md); overflow:hidden; background:#000;">
+        <iframe id="trailer-iframe" width="100%" height="100%" src="" title="Anime Official Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Komersial -->
+  <footer class="site-footer">
+    <div class="app-container">
+      <div class="footer-grid">
+        <div>
+          <div class="nav-brand">
+            <span class="nav-brand-badge">
+              <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" />
+              <span>Aniwave</span>
+            </span>
+          </div>
+          <p class="footer-brand-desc">
+            Platform katalog dan panduan anime modern. Menghadirkan informasi terverifikasi, rating akurat, dan direktori link streaming resmi.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Navigasi</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="index.html#tipe=serial">Serial Anime</a></li>
+            <li><a href="index.html#tipe=film">Film Anime</a></li>
+            <li><a href="admin.html">Admin Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Platform Legal</h3>
+          <ul class="footer-links">
+            <li><a href="https://www.crunchyroll.com" target="_blank" rel="noopener">Crunchyroll</a></li>
+            <li><a href="https://www.netflix.com" target="_blank" rel="noopener">Netflix</a></li>
+            <li><a href="https://www.bilibili.tv" target="_blank" rel="noopener">Bstation / Bilibili</a></li>
+            <li><a href="https://www.youtube.com/@MuseAsia" target="_blank" rel="noopener">Muse Asia</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Legal & Hak Cipta</h3>
+          <ul class="footer-links">
+            <li><span>Dibuat oleh <strong>TzRIO</strong></span></li>
+            <li><span>Hak cipta gambar dan karakter anime adalah milik masing-masing studio produksi.</span></li>
+            <li><a href="docs/COMMERCIAL_HANDOVER.md">Dokumentasi Lisensi</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Aniwave. All rights reserved. Original Brand by TzRIO.</span>
+        <span>White-Label Production Distribution Version 2.0.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="assets/js/beranda.js"></script>
 </body>
 </html>

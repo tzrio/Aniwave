@@ -1,0 +1,16 @@
+{
+  "name": "Aniwave",
+  "short_name": "Aniwave",
+  "description": "Platform Katalog & Temukan Anime Legal Resmi",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0b0c10",
+  "theme_color": "#e50914",
+  "icons": [
+    {
+      "src": "assets/img/aniwave-mark.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
