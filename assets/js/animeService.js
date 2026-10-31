@@ -1,8 +1,12 @@
 /**
  * Aniwave Data Repository & Admin CRUD Service
- * Combines static JSON baseline with LocalStorage overrides for Admin operations
+ * Triple-Tier Architecture:
+ * 1. Cloud Firestore (Firebase) if configured
+ * 2. LocalStorage Overrides (for client modifications)
+ * 3. Static data/anime.json Baseline (reliable zero-failure fallback)
  */
 import { CONFIG } from './config.js';
+import { firebaseService } from './firebaseService.js';
 
 export const animeService = {
   dataCache: null,
@@ -10,7 +14,14 @@ export const animeService = {
   async getAllAnime() {
     if (this.dataCache) return this.dataCache;
 
-    // 1. Fetch static baseline
+    // 1. Try Cloud Firebase first if available
+    const cloudData = await firebaseService.fetchAllAnime();
+    if (cloudData && Object.keys(cloudData).length > 0) {
+      this.dataCache = cloudData;
+      return cloudData;
+    }
+
+    // 2. Fallback to static baseline JSON
     let baseline = {};
     try {
       const res = await fetch('data/anime.json', { cache: 'no-cache' });
@@ -21,7 +32,7 @@ export const animeService = {
       console.warn('Gagal memuat baseline anime.json:', e);
     }
 
-    // 2. Merge local admin overrides if present
+    // 3. Merge local overrides
     const overrides = this.getOverrides();
     const merged = { ...baseline, ...overrides };
     this.dataCache = merged;
@@ -52,6 +63,16 @@ export const animeService = {
     if (!animeRecord.id) throw new Error('ID Anime wajib diisi.');
     if (!animeRecord.title) throw new Error('Judul Anime wajib diisi.');
 
+    // 1. Sync to Firebase if online
+    if (firebaseService.isOnline) {
+      try {
+        await firebaseService.saveAnime(animeRecord);
+      } catch (err) {
+        console.warn('Cloud save warning:', err);
+      }
+    }
+
+    // 2. Persist locally
     const overrides = this.getOverrides();
     overrides[animeRecord.id] = {
       ...animeRecord,
@@ -69,11 +90,9 @@ export const animeService = {
 
     if (!all[animeId]) return false;
 
-    // If it exists in overrides, delete or mark as deleted
     if (overrides[animeId]) {
       delete overrides[animeId];
     }
-    // Record deletion tombstone if was present in baseline
     overrides[animeId] = { _deleted: true };
     this.saveOverrides(overrides);
     return true;
@@ -82,7 +101,6 @@ export const animeService = {
   // Admin: Export complete dataset to JSON
   async exportFullDataset() {
     const all = await this.getAllAnime();
-    // Filter out tombstones
     const clean = {};
     for (const [k, v] of Object.entries(all)) {
       if (!v._deleted) clean[k] = v;

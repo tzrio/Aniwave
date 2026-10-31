@@ -6,6 +6,7 @@ import { setupNavigation } from './navComponent.js';
 import { authService } from './authService.js';
 import { animeService } from './animeService.js';
 import { toastService } from './toastService.js';
+import { jikanSyncService } from './jikanSyncService.js';
 
 let allAnimeData = {};
 
@@ -102,6 +103,47 @@ function bindAdminEvents() {
 
   document.getElementById('btn-new-anime')?.addEventListener('click', () => {
     openCreateForm();
+  });
+
+  // Auto-Sync Jikan / MAL
+  document.getElementById('btn-sync-mal')?.addEventListener('click', () => {
+    openCreateForm();
+    toastService.info('Masukkan judul anime di kolom pencarian MAL di dalam form.');
+  });
+
+  document.getElementById('btn-fetch-mal')?.addEventListener('click', async () => {
+    const q = document.getElementById('mal-search-query').value.trim();
+    if (!q) {
+      toastService.error('Ketik judul anime terlebih dahulu.');
+      return;
+    }
+
+    toastService.info(`Mencari data untuk "${q}" dari MyAnimeList...`);
+    try {
+      const results = await jikanSyncService.searchAnime(q);
+      if (results.length === 0) {
+        toastService.error('Anime tidak ditemukan di MyAnimeList.');
+        return;
+      }
+
+      const match = results[0];
+      // Auto-fill form fields
+      document.getElementById('form-id').value = match.id;
+      document.getElementById('form-title').value = match.title;
+      document.getElementById('form-type').value = match.type;
+      document.getElementById('form-score').value = match.score;
+      document.getElementById('form-year').value = match.year;
+      document.getElementById('form-studio').value = match.studio;
+      document.getElementById('form-status').value = match.status;
+      document.getElementById('form-cover').value = match.cover;
+      document.getElementById('form-trailer').value = match.trailerUrl;
+      document.getElementById('form-genres').value = match.genres.join(', ');
+      document.getElementById('form-synopsis').value = match.sinopsis.join('\n');
+
+      toastService.success(`Data "${match.title}" berhasil diisi otomatis!`);
+    } catch (err) {
+      toastService.error(`Gagal sync data: ${err.message}`);
+    }
   });
 
   // Export JSON

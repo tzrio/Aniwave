@@ -27,6 +27,14 @@ Semua perubahan penting untuk proyek Aniwave didokumentasikan di sini.
 - **Legal Streaming Direct Integration**:
   - Integrasi resmi ke penyedia berlisensi (Crunchyroll, Netflix, Bilibili, Muse Asia).
   - Pembersihan total link unduhan tidak berizin (Zippyshare/Mediafire).
+- **Halaman Pemutar Video Streaming (`watch.html` & `assets/js/watch.js`)**:
+  - Video player responsif dengan multi-server switcher.
+  - Selektor episode (1 - N), tombol Previous / Next episode, dan auto-save riwayat tontonan.
+  - Fitur Mode Bioskop (Cinema Mode).
+- **Auto-Sync Metadata MyAnimeList (`assets/js/jikanSyncService.js`)**:
+  - Tombol integrasi di Admin Dashboard untuk menarik data anime otomatis dari API MyAnimeList (Jikan v4).
+- **Dual-Mode Firebase Cloud Adapter (`assets/js/firebaseService.js` & `assets/js/firebaseConfig.js`)**:
+  - Sinkronisasi realtime Firestore jika dikonfigurasi, dengan fallback lokal instan saat offline.
 - **Modal Pemutar Video Trailer**:
   - Putar trailer YouTube resmi langsung di modal pop-up responsif.
 - **Dokumentasi Komersial Lengkap (`docs/`)**:

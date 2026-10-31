@@ -12,6 +12,9 @@ Platform penemuan katalog anime modern, cepat, dan siap komersial (White-Label R
 
 - 🎨 **Modern Dark/Light UI/UX**: Sistem token desain adaptif dengan transisi tema halus dan shimmer skeleton loader.
 - 🎬 **Hero Showcase & Trailer**: Banner unggulan anime dengan pemutar trailer YouTube resmi di modal terisolasi.
+- 📺 **Player Video Streaming (`watch.html`)**: Halaman nonton interaktif dengan multi-server switcher, daftar episode 1–N, tombol Prev/Next, dan Mode Bioskop (Cinema Mode).
+- ⚡ **Auto-Sync Metadata MyAnimeList (`jikanSyncService.js`)**: Isi otomatis data anime, cover HD, trailer, dan sinopsis dari database MAL secara instan di Admin Dashboard.
+- ☁️ **Dual-Mode Cloud Ready (`firebaseConfig.js`)**: Terhubung ke Firebase Firestore jika dikonfigurasi, atau otomatis beralih ke fallback dataset lokal saat offline.
 - 🔍 **Pencarian & Multi-Filter Canggih**: Cari berdasarkan judul, judul alternatif, genre dinamis, format (Serial/Film), status tayang, serta sorting (Rating, Rilis, Alfabet).
 - 📌 **Watchlist Personal**: Simpan anime favorit ke daftar pantau (*Plan to Watch*, *Watching*, *Completed*) tanpa wajib login.
 - 🔒 **Sistem Autentikasi Pengguna**: Modal login/registrasi modern, dukungan sesi pengguna, dan kontrol akses berbasis peran (RBAC).

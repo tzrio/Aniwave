@@ -59,6 +59,12 @@ function renderDetailContent(anime) {
   if (backdrop) backdrop.src = anime.banner || anime.cover;
   if (poster) poster.src = anime.cover;
 
+  // Tombol Nonton Streaming (Link ke watch.html)
+  const streamBtn = document.getElementById('btn-stream-now');
+  if (streamBtn) {
+    streamBtn.href = `watch.html#id=${encodeURIComponent(currentAnimeId)}&ep=1`;
+  }
+
   // Title & Alternative Titles
   document.getElementById('detail-title').textContent = anime.title;
   const altEl = document.getElementById('detail-alt-titles');
