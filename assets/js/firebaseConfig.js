@@ -1,17 +1,16 @@
 /**
  * Aniwave Firebase Configuration & Client Adapter
- * Dual-Mode: Uses Firebase Firestore if configured, otherwise falls back gracefully to local repository.
+ * Project: smileora-tzrio
  */
 
-// Ganti konfigurasi di bawah ini dengan config dari Firebase Console proyek kamu:
-// Firebase Console -> Project Settings -> General -> Your apps -> Web app -> Config
 export const FIREBASE_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyDC0OZ2yVq8oQPR0pMNiZZJqIDKiLXZTFY",
+  authDomain: "smileora-tzrio.firebaseapp.com",
+  projectId: "smileora-tzrio",
+  storageBucket: "smileora-tzrio.firebasestorage.app",
+  messagingSenderId: "227917051502",
+  appId: "1:227917051502:web:4eed77fbfce24e96e0d87f",
+  measurementId: "G-Q144FP3NKE"
 };
 
 export const isFirebaseConfigured = Boolean(

@@ -7,6 +7,7 @@ import { authService } from './authService.js';
 import { animeService } from './animeService.js';
 import { toastService } from './toastService.js';
 import { jikanSyncService } from './jikanSyncService.js';
+import { firebaseService } from './firebaseService.js';
 
 let allAnimeData = {};
 
@@ -84,7 +85,13 @@ async function loadAndRenderAdmin() {
   tbody.querySelectorAll('.btn-delete').forEach(btn => {
     btn.addEventListener('click', async () => {
       const id = btn.dataset.id;
-      if (confirm(`Yakin ingin menghapus anime ${id}?`)) {
+      const ok = await toastService.confirm({
+        title: 'Hapus Anime?',
+        message: `Apakah Anda yakin ingin menghapus anime <strong>${escapeHtml(id)}</strong> dari katalog?`,
+        confirmText: 'Ya, Hapus',
+        danger: true
+      });
+      if (ok) {
         await animeService.deleteAnime(id);
         toastService.success('Anime berhasil dihapus.');
         loadAndRenderAdmin();
@@ -144,6 +151,34 @@ function bindAdminEvents() {
     } catch (err) {
       toastService.error(`Gagal sync data: ${err.message}`);
     }
+  });
+
+  // Push Local Data to Firebase Cloud
+  document.getElementById('btn-sync-firebase')?.addEventListener('click', async () => {
+    if (!firebaseService.isOnline) {
+      toastService.error('Firebase belum dikonfigurasi di assets/js/firebaseConfig.js');
+      return;
+    }
+
+    const entries = Object.entries(allAnimeData).filter(([, a]) => !a._deleted);
+    const ok = await toastService.confirm({
+      title: 'Upload ke Firebase Cloud',
+      message: `Sinkronkan <strong>${entries.length} anime</strong> lokal langsung ke cloud database Firestore? Data akan dapat diakses publik dari perangkat mana pun.`,
+      confirmText: 'Mulai Sinkronisasi'
+    });
+    if (!ok) return;
+
+    toastService.info(`Sedang mengupload ${entries.length} anime ke Firebase...`);
+    let successCount = 0;
+    for (const [id, anime] of entries) {
+      try {
+        await firebaseService.saveAnime({ ...anime, id });
+        successCount++;
+      } catch (e) {
+        console.warn(`Gagal upload ${id}:`, e);
+      }
+    }
+    toastService.success(`Selesai! ${successCount} dari ${entries.length} anime tersimpan di cloud Firestore.`);
   });
 
   // Export JSON
