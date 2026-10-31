@@ -3,26 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aniwave — Platform Katalog & Temukan Anime Legal</title>
-  <meta name="description" content="Temukan serial dan film anime terbaik dengan info sinopsis lengkap, rating, dan tautan resmi legal streaming di Aniwave." />
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <title>SMILEORA — Where Stories Create Smiles</title>
+  <meta name="description" content="SMILEORA by SMILEON: A universe of stories, emotions, and unforgettable adventures. Streaming, katalog resmi, dan discovery anime modern." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/smileora-mark.svg" />
   <link rel="stylesheet" type="text/css" href="assets/css/theme.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <!-- Header Navigasi Modern -->
+  <!-- Header Navigasi SMILEORA -->
   <header class="site-header">
     <div class="app-container">
-      <nav class="nav-bar" aria-label="Navigasi Utama">
-        <a class="nav-brand" href="index.html" aria-label="Beranda Aniwave">
+      <nav class="nav-bar" aria-label="Navigasi Utama SMILEORA">
+        <a class="nav-brand" href="index.html" aria-label="Beranda SMILEORA">
           <span class="nav-brand-badge">
-            <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" aria-hidden="true" />
-            <span>Aniwave</span>
+            <img class="nav-brand-logo" src="assets/img/smileora-mark.svg" alt="SMILEORA" />
+            <span class="nav-brand-text">SMILEORA</span>
           </span>
         </a>
 
         <div class="nav-links">
           <a class="nav-link active" href="index.html">Beranda</a>
-          <a class="nav-link" href="index.html#tipe=serial">Serial</a>
+          <a class="nav-link" href="index.html#tipe=serial">Serial Anime</a>
           <a class="nav-link" href="index.html#tipe=film">Film</a>
           <a class="nav-link" href="#watchlist" id="nav-link-watchlist">Watchlist Saya</a>
         </div>
@@ -53,14 +54,14 @@
   <!-- Konten Utama -->
   <main class="app-container">
     <!-- Hero Showcase Carousel / Banner -->
-    <section id="hero-showcase" class="hero-banner" aria-label="Anime Pilihan">
+    <section id="hero-showcase" class="hero-banner" aria-label="Anime Unggulan SMILEORA">
       <img id="hero-bg" class="hero-backdrop" src="assets/img/aot-s4.jpg" alt="" />
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge-row">
-          <span class="badge-tag">UNGGULAN HARI INI</span>
+          <span class="badge-tag">SMILEORA SPOTLIGHT</span>
           <span id="hero-badge-type" class="badge-tag badge-tag-secondary">SERIAL</span>
-          <span id="hero-rating" class="badge-tag badge-tag-secondary" style="color:#facc15;">★ 8.81</span>
+          <span id="hero-rating" class="badge-tag badge-tag-secondary" style="color:#FACC15;">★ 8.81</span>
         </div>
         <h1 id="hero-title" class="hero-title">Attack On Titan: The Final Season</h1>
         <div class="hero-meta">
@@ -74,19 +75,36 @@
           Setelah meraih kemenangan dari para titan, kebenaran di luar dinding dan identitas titan akhirnya terungkap. Waktu telah berlalu dan ancaman dari Marley terus membayangi peradaban Pulau Paradis.
         </p>
         <div class="hero-actions">
-          <a id="hero-cta-detail" href="anime.html#aot-s4" class="btn-primary">Lihat Detail Lengkap</a>
+          <a id="hero-cta-play" href="watch.html#id=aot-s4&ep=1" class="btn-primary" style="padding:12px 24px; font-size:1rem;">
+            ▶ Mulai Nonton (Ep 1)
+          </a>
+          <a id="hero-cta-detail" href="anime.html#aot-s4" class="btn-secondary">Lihat Detail Lengkap</a>
           <button id="hero-btn-trailer" class="btn-secondary" type="button">Tonton Trailer</button>
         </div>
       </div>
     </section>
 
-    <!-- Affiliate / Monetization Notice -->
-    <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:12px 18px; margin-bottom:var(--space-lg); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-      <span style="font-size:0.85rem; color:var(--color-text-muted);">
-        📺 <strong>Dukung Industri Anime:</strong> Tonton secara legal di platform resmi seperti Crunchyroll, Netflix, dan Muse Asia.
-      </span>
-      <a href="https://www.crunchyroll.com" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size:0.8rem; padding:6px 12px;">
-        Jelajahi Platform Resmi &rarr;
+    <!-- Continue Watching Section (Jika Ada Riwayat Nonton) -->
+    <section id="continue-watching-section" class="continue-watching-section" style="display:none;" aria-label="Lanjutkan Menonton">
+      <div class="section-title-row">
+        <h2 class="section-title">Lanjutkan Menonton</h2>
+      </div>
+      <div id="continue-watching-list" class="continue-card-row">
+        <!-- Diisi lewat JS -->
+      </div>
+    </section>
+
+    <!-- Banner Resmi & Legalitas -->
+    <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:14px 20px; margin-bottom:var(--space-lg); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; box-shadow:var(--shadow-sm);">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:1.5rem;">🌌</span>
+        <div>
+          <strong style="color:var(--color-text-main); font-size:0.9rem;">SMILEORA Universe</strong>
+          <p style="font-size:0.8rem; color:var(--color-text-muted);">Dukung kreator & studio asli. Seluruh judul anime terhubung ke distributor streaming legal berlisensi resmi.</p>
+        </div>
+      </div>
+      <a href="https://www.crunchyroll.com" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size:0.8rem; padding:6px 14px;">
+        Mitra Lisensi Resmi &rarr;
       </a>
     </div>
 
@@ -95,7 +113,7 @@
       <div class="toolbar-grid">
         <div class="search-box">
           <span class="search-icon" aria-hidden="true">🔍</span>
-          <input id="cari-anime" class="search-input" type="search" placeholder="Cari anime, judul alternatif..." autocomplete="off" />
+          <input id="cari-anime" class="search-input" type="search" placeholder="Cari anime, judul alternatif, studio..." autocomplete="off" />
         </div>
 
         <select id="filter-genre" class="select-custom" aria-label="Pilih Genre">
@@ -103,9 +121,9 @@
         </select>
 
         <select id="filter-tipe" class="select-custom" aria-label="Pilih Format">
-          <option value="">Semua Tipe</option>
+          <option value="">Semua Format</option>
           <option value="serial">Serial TV</option>
-          <option value="film">Film / Movie</option>
+          <option value="film">Film Layar Lebar</option>
         </select>
 
         <select id="filter-status" class="select-custom" aria-label="Pilih Status">
@@ -124,15 +142,15 @@
       </div>
     </section>
 
-    <!-- Kontainer Daftar Anime -->
+    <!-- Kontainer Katalog Anime -->
     <section aria-label="Daftar Anime">
       <div class="section-title-row">
-        <h2 id="catalog-heading" class="section-title">Katalog Anime</h2>
-        <span id="catalog-count" style="font-size:0.85rem; color:var(--color-text-muted); font-weight:600;">Memuat...</span>
+        <h2 id="catalog-heading" class="section-title">Koleksi Anime</h2>
+        <span id="catalog-count" style="font-size:0.85rem; color:var(--color-text-muted); font-weight:600;">Memuat koleksi...</span>
       </div>
 
       <div id="anime-grid" class="anime-grid" aria-live="polite">
-        <!-- Skeleton Loaders -->
+        <!-- Skeleton Shimmer -->
         <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
         <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
         <div class="anime-card" style="height:320px;"><div class="skeleton" style="height:100%;"></div></div>
@@ -146,24 +164,25 @@
     <div class="modal-card modal-card-wide" style="padding:16px;">
       <button class="modal-close" id="trailer-modal-close" aria-label="Tutup Trailer">&times;</button>
       <div style="aspect-ratio:16/9; width:100%; margin-top:20px; border-radius:var(--radius-md); overflow:hidden; background:#000;">
-        <iframe id="trailer-iframe" width="100%" height="100%" src="" title="Anime Official Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="trailer-iframe" width="100%" height="100%" src="" title="SMILEORA Official Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
   </div>
 
-  <!-- Footer Komersial -->
+  <!-- Footer Resmi SMILEORA by SMILEON -->
   <footer class="site-footer">
     <div class="app-container">
       <div class="footer-grid">
         <div>
           <div class="nav-brand">
             <span class="nav-brand-badge">
-              <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" />
-              <span>Aniwave</span>
+              <img class="nav-brand-logo" src="assets/img/smileora-mark.svg" alt="SMILEORA" />
+              <span class="nav-brand-text">SMILEORA</span>
             </span>
           </div>
           <p class="footer-brand-desc">
-            Platform katalog dan panduan anime modern. Menghadirkan informasi terverifikasi, rating akurat, dan direktori link streaming resmi.
+            <strong>SMILEORA</strong> — Where Stories Create Smiles.<br />
+            Platform streaming dan penemuan anime komersial dari <strong>SMILEON</strong>. Menghadirkan semesta cerita, petualangan tak terlupakan, dan pengalaman menonton sinematik.
           </p>
         </div>
 
@@ -173,33 +192,34 @@
             <li><a href="index.html">Beranda</a></li>
             <li><a href="index.html#tipe=serial">Serial Anime</a></li>
             <li><a href="index.html#tipe=film">Film Anime</a></li>
-            <li><a href="admin.html">Admin Dashboard</a></li>
+            <li><a href="admin.html">Studio Admin</a></li>
           </ul>
         </div>
 
         <div>
-          <h3 class="footer-col-title">Platform Legal</h3>
+          <h3 class="footer-col-title">Mitra Lisensi</h3>
           <ul class="footer-links">
             <li><a href="https://www.crunchyroll.com" target="_blank" rel="noopener">Crunchyroll</a></li>
-            <li><a href="https://www.netflix.com" target="_blank" rel="noopener">Netflix</a></li>
-            <li><a href="https://www.bilibili.tv" target="_blank" rel="noopener">Bstation / Bilibili</a></li>
+            <li><a href="https://www.netflix.com" target="_blank" rel="noopener">Netflix Anime</a></li>
+            <li><a href="https://www.bilibili.tv" target="_blank" rel="noopener">Bilibili / Bstation</a></li>
             <li><a href="https://www.youtube.com/@MuseAsia" target="_blank" rel="noopener">Muse Asia</a></li>
           </ul>
         </div>
 
         <div>
-          <h3 class="footer-col-title">Legal & Hak Cipta</h3>
+          <h3 class="footer-col-title">SMILEON Media</h3>
           <ul class="footer-links">
-            <li><span>Dibuat oleh <strong>TzRIO</strong></span></li>
-            <li><span>Hak cipta gambar dan karakter anime adalah milik masing-masing studio produksi.</span></li>
-            <li><a href="docs/COMMERCIAL_HANDOVER.md">Dokumentasi Lisensi</a></li>
+            <li><span>Parent Company: <strong>SMILEON</strong></span></li>
+            <li><a href="docs/COMMERCIAL_HANDOVER.md">White-Label Handover</a></li>
+            <li><a href="docs/STREAMING_SYSTEM.md">Dokumentasi Streaming</a></li>
+            <li><a href="docs/LICENSING_AND_ATTRIBUTION.md">Hak Cipta & Lisensi</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <span>&copy; 2026 Aniwave. All rights reserved. Original Brand by TzRIO.</span>
-        <span>White-Label Production Distribution Version 2.0.0</span>
+        <span>&copy; 2026 SMILEORA by SMILEON. All rights reserved.</span>
+        <span>Version 3.0.0-PRO Production Release</span>
       </div>
     </div>
   </footer>

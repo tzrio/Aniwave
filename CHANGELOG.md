@@ -1,50 +1,27 @@
 # Changelog
 
-Semua perubahan penting untuk proyek Aniwave didokumentasikan di sini.
+Semua perubahan penting untuk proyek ini didokumentasikan di sini.
 
-## v2.0.0 — 2026-10-31 (Complete Professional & Commercial Transformation)
+## v3.0.0-PRO — 2026-10-31 (SMILEORA Complete Brand Transformation by SMILEON)
 
 ### Added
-- **Modern Design Token & Theme Engine (`assets/css/theme.css`)**:
-  - Dukungan penuh Dark Mode dan Light Mode instan dengan local preference persistence.
-  - Skema warna White-Label komersial dengan CSS variables (`--color-primary`, `--color-surface`, `--color-bg`).
-  - Skeleton shimmer animations untuk transisi pemuatan data yang mulus.
-- **Hero Showcase Carousel & Banner**:
-  - Tampilan unggulan interaktif di halaman beranda dengan sinopsis singkat, badge tipe, rating bintang, dan akses cepat ke trailer resmi.
-- **Admin Management System (`admin.html` & `assets/js/admin.js`)**:
-  - Dashboard administrasi dengan proteksi login role-based access (admin/user).
-  - Manajemen CRUD lengkap: Tambah, Edit, Hapus data anime.
-  - Fitur Ekspor dan Impor katalog JSON langsung dari browser.
-- **Sistem Autentikasi Pengguna (`assets/js/authService.js`, `assets/js/navComponent.js`)**:
-  - Modal login dan registrasi interaktif tanpa refresh halaman.
-  - Manajemen sesi pengguna dan mode guest yang tetap fungsional.
-- **Watchlist & Bookmark Engine (`assets/js/watchlistService.js`)**:
-  - Pengguna dapat menyimpan anime ke watchlist personal dengan penanda status ('plan', 'watching', 'completed').
-  - Tab navigasi khusus "Watchlist Saya" di halaman beranda.
-- **SEO & Structured Microdata (`assets/js/seoService.js`)**:
-  - Dynamic OpenGraph cards, Twitter cards, meta description generator, serta Schema.org JSON-LD (TVSeries & Movie).
-  - File `sitemap.xml`, `robots.txt`, dan `manifest.json`.
-- **Legal Streaming Direct Integration**:
-  - Integrasi resmi ke penyedia berlisensi (Crunchyroll, Netflix, Bilibili, Muse Asia).
-  - Pembersihan total link unduhan tidak berizin (Zippyshare/Mediafire).
-- **Halaman Pemutar Video Streaming (`watch.html` & `assets/js/watch.js`)**:
-  - Video player responsif dengan multi-server switcher.
-  - Selektor episode (1 - N), tombol Previous / Next episode, dan auto-save riwayat tontonan.
-  - Fitur Mode Bioskop (Cinema Mode).
-- **Auto-Sync Metadata MyAnimeList (`assets/js/jikanSyncService.js`)**:
-  - Tombol integrasi di Admin Dashboard untuk menarik data anime otomatis dari API MyAnimeList (Jikan v4).
-- **Dual-Mode Firebase Cloud Adapter (`assets/js/firebaseService.js` & `assets/js/firebaseConfig.js`)**:
-  - Sinkronisasi realtime Firestore jika dikonfigurasi, dengan fallback lokal instan saat offline.
-- **Modal Pemutar Video Trailer**:
-  - Putar trailer YouTube resmi langsung di modal pop-up responsif.
-- **Dokumentasi Komersial Lengkap (`docs/`)**:
-  - `TECHNICAL_AUDIT.md`, `ARCHITECTURE.md`, `ADMIN_GUIDE.md`, `COMMERCIAL_HANDOVER.md`, `DEPLOYMENT.md`.
-- **Automated Validation Test Suite (`tests/test_suite.js`)**.
+- **Transformasi Brand Penuh ke SMILEORA**:
+  - Identitas resmi: **SMILEORA by SMILEON** (*"Where Stories Create Smiles"*).
+  - Aset visual baru: Logo Wordmark SVG (`smileora-logo.svg`) dan Aura Mark SVG (`smileora-mark.svg`).
+  - Palet warna baru: Deep Space Navy (`#0B0D17`) dan Aurora Violet (`#A78BFA` / `#7C5CFC`).
+- **Sistem Streaming Modular & Universal Player (`assets/js/streamingEngine.js`)**:
+  - Dukungan streaming adaptif **HLS (`hls.js`)**, **HTML5 MP4**, dan **Sandboxed Partner Embed**.
+  - Multi-Server selector dengan logika cerdas **Intelligent Server Auto-Fallback**.
+  - Pelacak menit tontonan otomatis & memori resume point per episode.
+- **Baris Lanjutkan Menonton ("Continue Watching")**:
+  - Carousel dinamis di beranda yang menampilkan anime yang sedang ditonton beserta progress bar visual.
+- **Dokumentasi Lengkap SMILEORA**:
+  - `docs/STREAMING_SYSTEM.md`, `docs/DATABASE_SCHEMA.md`, `docs/SECURITY.md`, `docs/LICENSING_AND_ATTRIBUTION.md`.
 
-### Changed
-- Pembaruan total markup HTML `index.html` dan `anime.html` ke standar semantic HTML5 modern.
-- Refaktorisasi modular arsitektur JS ke ES Modules berorientasi layanan (`animeService`, `authService`, `seoService`, `watchlistService`, `toastService`).
-- Normalisasi dan modernisasi skema `data/anime.json` mencakup ratings terverifikasi, genres array, dan link provider legal.
+---
+
+## v2.0.0 — 2026-10-31 (Cloud Firestore & Streaming Integration)
+- Integrasi Cloud Firestore (`smileora-tzrio`), auto-sync metadata MyAnimeList/AniList, dan player video responsif.
 
 ---
 

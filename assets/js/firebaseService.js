@@ -1,10 +1,8 @@
 /**
- * Aniwave Firebase Service Layer
- * Directly interfaces with Firebase Firestore REST/SDK.
- * Features automatic fallback to local anime.json if credentials are empty or offline.
+ * SMILEORA Firebase Service Layer
+ * Directly interfaces with Firebase Firestore REST API.
  */
 import { FIREBASE_CONFIG, isFirebaseConfigured } from './firebaseConfig.js';
-import { toastService } from './toastService.js';
 
 class FirebaseService {
   constructor() {
@@ -13,16 +11,13 @@ class FirebaseService {
     this.isOnline = isFirebaseConfigured;
   }
 
-  // REST Firestore Endpoint (Zero-dependency, runs natively without heavy npm SDK)
   getBaseUrl() {
     return `https://firestore.googleapis.com/v1/projects/${this.projectId}/databases/(default)/documents/anime`;
   }
 
   // 1. Fetch all anime from Firebase Firestore
   async fetchAllAnime() {
-    if (!this.isOnline) {
-      return null; // Signals caller to use local fallback
-    }
+    if (!this.isOnline) return null;
 
     try {
       const res = await fetch(`${this.getBaseUrl()}?key=${this.apiKey}`, { cache: 'no-cache' });
@@ -33,8 +28,12 @@ class FirebaseService {
       const docs = json.documents || [];
       for (const doc of docs) {
         const id = doc.name.split('/').pop();
-        results[id] = this.decodeFirestoreFields(doc.fields);
-        results[id].id = id;
+        const decoded = this.decodeFirestoreFields(doc.fields);
+        // Abaikan dokumen yang ditandai terhapus
+        if (!decoded._deleted) {
+          results[id] = decoded;
+          results[id].id = id;
+        }
       }
       return results;
     } catch (err) {
@@ -45,12 +44,10 @@ class FirebaseService {
 
   // 2. Save or update an anime directly to Firestore
   async saveAnime(animeRecord) {
-    if (!this.isOnline) {
-      throw new Error('Firebase belum dikonfigurasi. Isi kredensial di assets/js/firebaseConfig.js');
-    }
+    if (!this.isOnline) return;
 
     const id = animeRecord.id;
-    const url = `${this.getBaseUrl()}/${id}?key=${this.apiKey}`;
+    const url = `${this.getBaseUrl()}/${encodeURIComponent(id)}?key=${this.apiKey}`;
     const firestoreBody = {
       fields: this.encodeFirestoreFields(animeRecord)
     };
@@ -63,13 +60,31 @@ class FirebaseService {
 
     if (!res.ok) {
       const err = await res.text();
-      throw new Error(`Gagal menyimpan ke Firebase: ${err}`);
+      console.error(`Gagal menyimpan ke Firebase Firestore: ${err}`);
+      throw new Error(`Gagal menyimpan ke cloud: ${err}`);
     }
 
     return await res.json();
   }
 
-  // 3. Helper to decode Firestore typed format to clean JavaScript Object
+  // 3. Delete an anime permanently from Firestore Cloud
+  async deleteAnime(animeId) {
+    if (!this.isOnline) return;
+
+    const url = `${this.getBaseUrl()}/${encodeURIComponent(animeId)}?key=${this.apiKey}`;
+    try {
+      const res = await fetch(url, { method: 'DELETE' });
+      if (!res.ok) {
+        console.warn(`Firestore delete status: ${res.status}`);
+      }
+      return true;
+    } catch (err) {
+      console.error('Gagal menghapus dokumen dari Firestore:', err);
+      return false;
+    }
+  }
+
+  // 4. Helper to decode Firestore typed format to clean JavaScript Object
   decodeFirestoreFields(fields) {
     if (!fields) return {};
     const res = {};
@@ -85,10 +100,11 @@ class FirebaseService {
     return res;
   }
 
-  // 4. Helper to encode JS Object to Firestore typed format
+  // 5. Helper to encode JS Object to Firestore typed format
   encodeFirestoreFields(obj) {
     const fields = {};
     for (const [k, v] of Object.entries(obj)) {
+      if (k === 'id') continue;
       if (typeof v === 'string') fields[k] = { stringValue: v };
       else if (typeof v === 'number') fields[k] = { doubleValue: v };
       else if (typeof v === 'boolean') fields[k] = { booleanValue: v };

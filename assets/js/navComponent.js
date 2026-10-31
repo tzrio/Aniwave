@@ -1,5 +1,6 @@
 /**
- * Aniwave Global Navigation & Auth Modal Handler
+ * SMILEORA Navigation & Global Header Component
+ * Brand: SMILEORA | Parent: SMILEON
  */
 import { CONFIG } from './config.js';
 import { authService } from './authService.js';
@@ -10,7 +11,7 @@ export function setupNavigation() {
   const savedTheme = localStorage.getItem(CONFIG.storageKeys.theme) || CONFIG.site.defaultTheme;
   document.documentElement.setAttribute('data-theme', savedTheme);
 
-  // 2. Render Auth state in header
+  // 2. Render Auth state
   renderAuthNav();
 
   // 3. Theme Toggle Button
@@ -21,7 +22,7 @@ export function setupNavigation() {
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem(CONFIG.storageKeys.theme, next);
-      toastService.info(`Tema diubah ke mode ${next}`);
+      toastService.info(`Tema diubah ke mode ${next === 'dark' ? 'Deep Aurora (Dark)' : 'Twilight (Light)'}`);
     });
   }
 
@@ -35,7 +36,7 @@ export function renderAuthNav() {
 
   const currentUser = authService.getCurrentUser();
   if (currentUser) {
-    const adminLink = currentUser.role === 'admin' ? `<a href="admin.html" class="btn-secondary" style="font-size:0.8rem;">Admin Panel</a>` : '';
+    const adminLink = currentUser.role === 'admin' ? `<a href="admin.html" class="btn-secondary" style="font-size:0.8rem; padding:6px 14px;">Studio Admin</a>` : '';
     container.innerHTML = `
       <div style="display:flex; align-items:center; gap:8px;">
         ${adminLink}
@@ -46,7 +47,7 @@ export function renderAuthNav() {
 
     document.getElementById('btn-logout')?.addEventListener('click', () => {
       authService.logout();
-      toastService.info('Berhasil logout.');
+      toastService.info('Berhasil keluar dari akun SMILEORA.');
       renderAuthNav();
       window.dispatchEvent(new CustomEvent('auth-changed'));
     });
@@ -71,8 +72,11 @@ function setupAuthModal() {
       <div class="modal-card">
         <button class="modal-close" id="auth-modal-close" aria-label="Tutup modal">&times;</button>
         <div id="auth-modal-content">
-          <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:8px;" id="auth-title">Masuk ke Aniwave</h2>
-          <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:20px;" id="auth-desc">Kelola anime favorit dan riwayat tontonan Anda.</p>
+          <div style="text-align:center; margin-bottom:16px;">
+            <img src="assets/img/smileora-mark.svg" alt="SMILEORA" style="width:40px; height:40px; margin:0 auto 8px;" />
+            <h2 style="font-size:1.4rem; font-weight:900;" id="auth-title">Masuk ke SMILEORA</h2>
+            <p style="font-size:0.85rem; color:var(--color-text-muted);" id="auth-desc">${CONFIG.site.tagline}</p>
+          </div>
 
           <form id="form-login">
             <div class="form-group">
@@ -85,7 +89,7 @@ function setupAuthModal() {
             </div>
             <button class="btn-primary" style="width:100%; margin-top:8px;" type="submit">Masuk</button>
             <p style="text-align:center; margin-top:14px; font-size:0.85rem; color:var(--color-text-muted);">
-              Belum punya akun? <a href="#" id="to-register" style="color:var(--color-primary); font-weight:700;">Daftar baru</a>
+              Belum punya akun? <a href="#" id="to-register" style="color:var(--color-primary); font-weight:700;">Daftar akun baru</a>
             </p>
           </form>
 
@@ -102,7 +106,7 @@ function setupAuthModal() {
               <label class="form-label" for="reg-pw">Password</label>
               <input class="form-input" id="reg-pw" type="password" placeholder="Minimal 6 karakter" required />
             </div>
-            <button class="btn-primary" style="width:100%; margin-top:8px;" type="submit">Buat Akun</button>
+            <button class="btn-primary" style="width:100%; margin-top:8px;" type="submit">Buat Akun SMILEORA</button>
             <p style="text-align:center; margin-top:14px; font-size:0.85rem; color:var(--color-text-muted);">
               Sudah punya akun? <a href="#" id="to-login" style="color:var(--color-primary); font-weight:700;">Masuk sekarang</a>
             </p>
@@ -117,29 +121,27 @@ function setupAuthModal() {
       if (e.target === modal) closeAuthModal();
     });
 
-    // Toggle login/register forms
     document.getElementById('to-register')?.addEventListener('click', (e) => {
       e.preventDefault();
       document.getElementById('form-login').style.display = 'none';
       document.getElementById('form-register').style.display = 'block';
-      document.getElementById('auth-title').textContent = 'Buat Akun Aniwave';
+      document.getElementById('auth-title').textContent = 'Gabung dengan SMILEORA';
     });
 
     document.getElementById('to-login')?.addEventListener('click', (e) => {
       e.preventDefault();
       document.getElementById('form-register').style.display = 'none';
       document.getElementById('form-login').style.display = 'block';
-      document.getElementById('auth-title').textContent = 'Masuk ke Aniwave';
+      document.getElementById('auth-title').textContent = 'Masuk ke SMILEORA';
     });
 
-    // Form Submissions
     document.getElementById('form-login')?.addEventListener('submit', (e) => {
       e.preventDefault();
       try {
         const id = document.getElementById('login-id').value;
         const pw = document.getElementById('login-pw').value;
         authService.login(id, pw);
-        toastService.success('Login berhasil!');
+        toastService.success('Selamat datang kembali di SMILEORA!');
         closeAuthModal();
         renderAuthNav();
         window.dispatchEvent(new CustomEvent('auth-changed'));
@@ -155,7 +157,7 @@ function setupAuthModal() {
         const email = document.getElementById('reg-email').value;
         const pw = document.getElementById('reg-pw').value;
         authService.register(user, email, pw);
-        toastService.success('Akun berhasil dibuat dan login!');
+        toastService.success('Akun SMILEORA berhasil dibuat!');
         closeAuthModal();
         renderAuthNav();
         window.dispatchEvent(new CustomEvent('auth-changed'));

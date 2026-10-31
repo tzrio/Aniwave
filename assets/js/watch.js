@@ -1,22 +1,22 @@
 /**
- * Aniwave Watch & Video Streaming Controller
- * Handles multi-server switching, episode navigation (Prev/Next/List), and Cinema Mode
+ * SMILEORA Watch & Video Streaming Controller
+ * Integrated with SmileoraPlayer (HLS, multi-server auto-fallback, subtitles)
  */
 import { setupNavigation } from './navComponent.js';
 import { animeService } from './animeService.js';
 import { seoService } from './seoService.js';
 import { toastService } from './toastService.js';
+import { SmileoraPlayer } from './streamingEngine.js';
 
 let currentAnime = null;
 let currentAnimeId = '';
-let currentEpIndex = 0; // 0-indexed
-let activeServerIndex = 0;
+let currentEpIndex = 0;
+let playerInstance = null;
 
 function parseWatchParams() {
   const hash = String(window.location.hash || '').replace(/^#/, '');
   const params = new URLSearchParams(hash || window.location.search);
 
-  // Bisa via #id=aot-s4&ep=1 atau #aot-s4/ep1
   let id = params.get('id');
   let ep = parseInt(params.get('ep'), 10);
 
@@ -50,33 +50,38 @@ async function initWatch() {
       return;
     }
 
-    // Set link balik ke detail anime
     const backLink = document.getElementById('nav-back-detail');
     if (backLink) backLink.href = `anime.html#${encodeURIComponent(currentAnimeId)}`;
 
-    // Normalisasi episode list
     normalizeEpisodes(currentAnime);
 
-    // Cari index episode sesuai nomor
     const epCount = currentAnime.episodesList.length;
     currentEpIndex = Math.max(0, Math.min(epNumber - 1, epCount - 1));
 
-    renderPlayer();
+    // Initialize Smileora Universal Streaming Player
+    playerInstance = new SmileoraPlayer({
+      container: document.getElementById('player-viewport'),
+      serverContainer: document.getElementById('server-btn-container'),
+      animeId: currentAnimeId,
+      onNextEpisode: () => goToNextEpisode(),
+      onPrevEpisode: () => goToPrevEpisode()
+    });
+
+    renderCurrentEpisode();
     renderEpisodeGrid();
     bindWatchEvents();
 
     seoService.updatePageMeta({
       title: `Nonton ${currentAnime.title} Episode ${currentEpIndex + 1}`,
-      description: `Streaming gratis subtitle Indonesia ${currentAnime.title} episode ${currentEpIndex + 1}. Kualitas jernih HD.`,
+      description: `Streaming anime ${currentAnime.title} episode ${currentEpIndex + 1} di SMILEORA by SMILEON. Kualitas HD adaptif.`,
       image: currentAnime.cover
     });
   } catch (err) {
-    console.error('Error in watch player:', err);
+    console.error('Error in SMILEORA watch controller:', err);
     toastService.error('Gagal menyiapkan video player.');
   }
 }
 
-// Menghasilkan daftar episode jika belum ada di objek anime
 function normalizeEpisodes(anime) {
   if (Array.isArray(anime.episodesList) && anime.episodesList.length > 0) {
     return;
@@ -86,19 +91,34 @@ function normalizeEpisodes(anime) {
   const list = [];
 
   for (let i = 1; i <= total; i++) {
-    // Sediakan multi-server embed default (Trailer resmi / embed stream)
+    // Sediakan multi-source (HLS stream + Embed)
     list.push({
       number: i,
       title: `Episode ${i}`,
-      servers: [
+      sources: [
         {
-          name: 'Server 1 (Official HD)',
+          id: `src-hls-${i}`,
+          name: 'Server Aurora (HLS)',
+          type: 'hls',
+          // Test HLS stream open sample
+          url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+        },
+        {
+          id: `src-embed-${i}`,
+          name: 'Server Zenith (Embed)',
+          type: 'embed',
           url: anime.trailerUrl || 'https://www.youtube.com/embed/M_OauHnAFc8'
         },
         {
-          name: 'Server 2 (Cadangan)',
+          id: `src-partner-${i}`,
+          name: 'Server Partner',
+          type: 'embed',
           url: anime.trailerUrl || 'https://www.youtube.com/embed/LHtdKWJjeg4'
         }
+      ],
+      subtitles: [
+        { lang: 'id', label: 'Indonesia', default: true, url: '' },
+        { lang: 'en', label: 'English', default: false, url: '' }
       ]
     });
   }
@@ -106,11 +126,10 @@ function normalizeEpisodes(anime) {
   anime.episodesList = list;
 }
 
-function renderPlayer() {
+function renderCurrentEpisode() {
   const currentEp = currentAnime.episodesList[currentEpIndex];
   if (!currentEp) return;
 
-  // Judul & Subtitle
   document.getElementById('watch-anime-title').textContent = currentAnime.title;
   document.getElementById('watch-ep-subtitle').textContent = `Sedang Memutar: ${currentEp.title}`;
   document.getElementById('watch-meta-score').textContent = `★ ${currentAnime.score || '—'}`;
@@ -120,41 +139,14 @@ function renderPlayer() {
     syn.textContent = Array.isArray(currentAnime.sinopsis) ? currentAnime.sinopsis.join(' ') : currentAnime.sinopsis;
   }
 
-  // Render Server Switcher Buttons
-  const serverContainer = document.getElementById('server-btn-container');
-  if (serverContainer) {
-    serverContainer.innerHTML = '';
-    currentEp.servers.forEach((srv, idx) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = `btn-server ${idx === activeServerIndex ? 'active' : ''}`;
-      btn.textContent = srv.name;
-      btn.addEventListener('click', () => {
-        activeServerIndex = idx;
-        renderPlayer();
-        toastService.info(`Beralih ke ${srv.name}`);
-      });
-      serverContainer.appendChild(btn);
-    });
-  }
+  // Load into player engine
+  playerInstance.loadEpisode(currentAnimeId, currentEp);
 
-  // Set URL Video Iframe
-  const iframe = document.getElementById('video-frame');
-  const targetServer = currentEp.servers[activeServerIndex] || currentEp.servers[0];
-  if (iframe && targetServer) {
-    iframe.src = targetServer.url;
-  }
-
-  // Update State Prev / Next Button
   const prevBtn = document.getElementById('btn-prev-ep');
   const nextBtn = document.getElementById('btn-next-ep');
   if (prevBtn) prevBtn.disabled = currentEpIndex === 0;
   if (nextBtn) nextBtn.disabled = currentEpIndex === currentAnime.episodesList.length - 1;
 
-  // Simpan riwayat episode terakhir yang ditonton di LocalStorage
-  saveWatchHistory(currentAnimeId, currentEpIndex + 1);
-
-  // Update hash URL agar bookmark / share link tepat
   history.replaceState(null, '', `#id=${encodeURIComponent(currentAnimeId)}&ep=${currentEpIndex + 1}`);
 }
 
@@ -175,36 +167,33 @@ function renderEpisodeGrid() {
     btn.title = ep.title;
     btn.addEventListener('click', () => {
       currentEpIndex = idx;
-      activeServerIndex = 0;
-      renderPlayer();
+      renderCurrentEpisode();
       renderEpisodeGrid();
     });
     grid.appendChild(btn);
   });
 }
 
+function goToNextEpisode() {
+  if (currentEpIndex < currentAnime.episodesList.length - 1) {
+    currentEpIndex++;
+    renderCurrentEpisode();
+    renderEpisodeGrid();
+  }
+}
+
+function goToPrevEpisode() {
+  if (currentEpIndex > 0) {
+    currentEpIndex--;
+    renderCurrentEpisode();
+    renderEpisodeGrid();
+  }
+}
+
 function bindWatchEvents() {
-  // Tombol Next Episode
-  document.getElementById('btn-next-ep')?.addEventListener('click', () => {
-    if (currentEpIndex < currentAnime.episodesList.length - 1) {
-      currentEpIndex++;
-      activeServerIndex = 0;
-      renderPlayer();
-      renderEpisodeGrid();
-    }
-  });
+  document.getElementById('btn-next-ep')?.addEventListener('click', () => goToNextEpisode());
+  document.getElementById('btn-prev-ep')?.addEventListener('click', () => goToPrevEpisode());
 
-  // Tombol Prev Episode
-  document.getElementById('btn-prev-ep')?.addEventListener('click', () => {
-    if (currentEpIndex > 0) {
-      currentEpIndex--;
-      activeServerIndex = 0;
-      renderPlayer();
-      renderEpisodeGrid();
-    }
-  });
-
-  // Mode Bioskop (Cinema Mode)
   const cinemaBtn = document.getElementById('btn-cinema-mode');
   cinemaBtn?.addEventListener('click', () => {
     document.body.classList.toggle('cinema-mode-active');
@@ -212,21 +201,6 @@ function bindWatchEvents() {
     cinemaBtn.textContent = isActive ? '💡 Matikan Bioskop' : '💡 Mode Bioskop';
     toastService.info(isActive ? 'Mode bioskop aktif.' : 'Mode bioskop dinonaktifkan.');
   });
-}
-
-function saveWatchHistory(animeId, episodeNumber) {
-  try {
-    const historyKey = 'aniwave_history';
-    const raw = localStorage.getItem(historyKey);
-    const history = raw ? JSON.parse(raw) : {};
-    history[animeId] = {
-      lastEpisode: episodeNumber,
-      timestamp: new Date().toISOString()
-    };
-    localStorage.setItem(historyKey, JSON.stringify(history));
-  } catch (e) {
-    // Ignore localStorage issues
-  }
 }
 
 document.addEventListener('DOMContentLoaded', initWatch);

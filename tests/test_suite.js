@@ -47,10 +47,13 @@ const requiredFiles = [
   'anime.html',
   'admin.html',
   'watch.html',
+  'assets/img/smileora-mark.svg',
+  'assets/img/smileora-logo.svg',
   'assets/css/theme.css',
   'assets/js/config.js',
   'assets/js/firebaseConfig.js',
   'assets/js/firebaseService.js',
+  'assets/js/streamingEngine.js',
   'assets/js/jikanSyncService.js',
   'assets/js/authService.js',
   'assets/js/animeService.js',
@@ -62,19 +65,26 @@ const requiredFiles = [
   'assets/js/anime.js',
   'assets/js/admin.js',
   'assets/js/watch.js',
+  'docs/img/screenshot-home.svg',
+  'docs/img/screenshot-player.svg',
+  'docs/img/screenshot-admin.svg',
   'robots.txt',
   'sitemap.xml',
   'manifest.json',
   '.env.example',
   'docs/TECHNICAL_AUDIT.md',
   'docs/ARCHITECTURE.md',
+  'docs/STREAMING_SYSTEM.md',
+  'docs/DATABASE_SCHEMA.md',
   'docs/ADMIN_GUIDE.md',
   'docs/COMMERCIAL_HANDOVER.md',
-  'docs/DEPLOYMENT.md'
+  'docs/DEPLOYMENT.md',
+  'docs/SECURITY.md',
+  'docs/LICENSING_AND_ATTRIBUTION.md'
 ];
 
 for (const file of requiredFiles) {
   assert(fs.existsSync(path.resolve(file)), `Critical file must exist: ${file}`);
 }
 
-console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY! Aniwave is production and commercial-ready.\n');
+console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY! SMILEORA by SMILEON is production and commercial-ready.\n');

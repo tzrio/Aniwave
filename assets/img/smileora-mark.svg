@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="smileora-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C4B5FD"/>
+      <stop offset="50%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#7C5CFC"/>
+    </linearGradient>
+    <linearGradient id="smileora-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C5CFC" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#A78BFA" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Aura Circle -->
+  <circle cx="24" cy="24" r="22" fill="#111426" stroke="#252B48" stroke-width="1.5"/>
+  <circle cx="24" cy="24" r="18" fill="url(#smileora-glow)" opacity="0.25"/>
+  <!-- Smile Arc (The Smile & Aurora Wave) -->
+  <path d="M12 24 C16 34, 32 34, 36 24" stroke="url(#smileora-grad)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Sparkle / Aura Star (Top Right) -->
+  <path d="M33 13 L34.5 9 L36 13 L40 14.5 L36 16 L34.5 20 L33 16 L29 14.5 Z" fill="#F8FAFC"/>
+  <!-- Accent Eye Dot (Playful & Expressive) -->
+  <circle cx="17" cy="18" r="2.5" fill="url(#smileora-grad)"/>
+</svg>

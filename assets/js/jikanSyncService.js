@@ -1,145 +1,182 @@
 /**
- * Aniwave Multi-Source Anime Sync Worker
- * Primary: Jikan (MyAnimeList v4) with direct CORS / proxy fallback
- * Secondary Fallback: AniList GraphQL API (Direct CORS-friendly, zero rate-limit blocks)
+ * SMILEORA Multi-Source Anime Sync Worker
+ * Direct CORS-Friendly Endpoints:
+ * 1. AniList GraphQL API (Direct CORS permitted globally)
+ * 2. Kitsu.io Public REST API (Direct CORS permitted)
+ * 3. Jikan as fallback
  */
 
 export const jikanSyncService = {
-  jikanBase: 'https://api.jikan.moe/v4',
   anilistBase: 'https://graphql.anilist.co',
+  kitsuBase: 'https://kitsu.io/api/edge',
+  jikanBase: 'https://api.jikan.moe/v4',
 
-  async searchAnime(query) {
-    const q = String(query || '').trim();
-    if (!q) return [];
-
-    // 1. Coba lewat Jikan (MyAnimeList v4)
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-      const res = await fetch(`${this.jikanBase}/anime?q=${encodeURIComponent(q)}&limit=5&sfw=true`, {
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const json = await res.json();
-        if (Array.isArray(json.data) && json.data.length > 0) {
-          return json.data.map(item => this.mapJikanToAniwave(item));
-        }
-      }
-    } catch (err) {
-      console.warn('Jikan API error/timeout, mencoba fallback ke AniList GraphQL...', err);
-    }
-
-    // 2. Fallback Otomatis ke AniList GraphQL (Lebih cepat, bebas CORS, stabil)
-    return await this.searchAniList(q);
+  extractMalId(input) {
+    const s = String(input || '').trim();
+    if (/^\d+$/.test(s)) return parseInt(s, 10);
+    const match = s.match(/myanimelist\.net\/anime\/(\d+)/i);
+    if (match) return parseInt(match[1], 10);
+    return null;
   },
 
-  async searchAniList(query) {
-    const gqlQuery = `
-      query ($search: String) {
-        Page(page: 1, perPage: 5) {
-          media(search: $search, type: ANIME, sort: SEARCH_MATCH) {
-            id
-            idMal
-            title {
-              romaji
-              english
-              native
-            }
-            coverImage {
-              large
-              extraLarge
-            }
-            bannerImage
-            averageScore
-            seasonYear
-            season
-            format
-            status
-            episodes
-            duration
-            genres
-            studios(isMain: true) {
-              nodes {
-                name
-              }
-            }
-            trailer {
+  async fetchByQueryOrUrl(input) {
+    const clean = String(input || '').trim();
+    if (!clean) return [];
+
+    const malId = this.extractMalId(clean);
+
+    // ============================================================
+    // KASUS 1: Menggunakan Link MAL atau Angka ID (misal: 32281)
+    // ============================================================
+    if (malId) {
+      console.log('[SMILEORA Sync] Mencari via MAL ID:', malId);
+
+      // 1. AniList idMal query (Bebas blokir, direct CORS)
+      try {
+        const aniListRes = await this.queryAniList(`
+          query ($idMal: Int) {
+            Media(idMal: $idMal, type: ANIME) {
               id
-              site
+              idMal
+              title { romaji english native }
+              coverImage { large extraLarge }
+              bannerImage
+              averageScore
+              seasonYear
+              season
+              format
+              status
+              episodes
+              duration
+              genres
+              studios(isMain: true) { nodes { name } }
+              trailer { id site }
+              description(asHtml: false)
             }
-            description(asHtml: false)
+          }
+        `, { idMal: malId });
+
+        if (aniListRes?.data?.Media) {
+          return [this.mapAniListToAniwave(aniListRes.data.Media)];
+        }
+      } catch (err) {
+        console.warn('AniList idMal lookup error:', err);
+      }
+
+      // 2. Kitsu fallback jika ada judul di URL (misal: "Kimi_no_Na_wa")
+      const titleSlug = clean.split('/').pop()?.replace(/_/g, ' ');
+      if (titleSlug && !/^\d+$/.test(titleSlug)) {
+        return await this.searchKitsu(titleSlug);
+      }
+    }
+
+    // ============================================================
+    // KASUS 2: Pencarian Judul (misal: "naruto", "bleach", "your name")
+    // ============================================================
+    console.log('[SMILEORA Sync] Mencari via Nama Anime:', clean);
+
+    // 1. Prioritas Utama: AniList GraphQL Search
+    try {
+      const aniListRes = await this.queryAniList(`
+        query ($search: String) {
+          Page(page: 1, perPage: 8) {
+            media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
+              id
+              idMal
+              title { romaji english native }
+              coverImage { large extraLarge }
+              bannerImage
+              averageScore
+              seasonYear
+              season
+              format
+              status
+              episodes
+              duration
+              genres
+              studios(isMain: true) { nodes { name } }
+              trailer { id site }
+              description(asHtml: false)
+            }
           }
         }
-      }
-    `;
+      `, { search: clean });
 
+      const mediaList = aniListRes?.data?.Page?.media || [];
+      if (mediaList.length > 0) {
+        return mediaList.map(item => this.mapAniListToAniwave(item));
+      }
+    } catch (err) {
+      console.warn('AniList GraphQL query error, trying Kitsu fallback...', err);
+    }
+
+    // 2. Prioritas Cadangan: Kitsu.io Public API (100% CORS Allowed)
+    try {
+      const kitsuResults = await this.searchKitsu(clean);
+      if (kitsuResults.length > 0) return kitsuResults;
+    } catch (err) {
+      console.warn('Kitsu API error:', err);
+    }
+
+    return [];
+  },
+
+  // Helper AniList GraphQL
+  async queryAniList(query, variables) {
     const res = await fetch(this.anilistBase, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({
-        query: gqlQuery,
-        variables: { search: query }
-      })
+      body: JSON.stringify({ query, variables })
     });
-
-    if (!res.ok) {
-      throw new Error('Gagal mengambil data dari MyAnimeList dan AniList.');
-    }
-
-    const json = await res.json();
-    const list = json.data?.Page?.media || [];
-    return list.map(item => this.mapAniListToAniwave(item));
+    if (!res.ok) throw new Error(`AniList returned status: ${res.status}`);
+    return await res.json();
   },
 
-  mapJikanToAniwave(jikanData) {
-    if (!jikanData) return null;
+  // Helper Kitsu.io
+  async searchKitsu(query) {
+    const res = await fetch(`${this.kitsuBase}/anime?filter[text]=${encodeURIComponent(query)}&page[limit]=6`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    const data = json.data || [];
 
-    const idSlug = (jikanData.title || '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+    return data.map(item => {
+      const attr = item.attributes || {};
+      const title = attr.canonicalTitle || attr.titles?.en || attr.titles?.en_jp || 'Untitled';
+      const idSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const score = attr.averageRating ? Number((parseFloat(attr.averageRating) / 10).toFixed(2)) : 8.0;
 
-    const genres = (jikanData.genres || []).map(g => g.name);
-    const studio = (jikanData.studios && jikanData.studios[0]) ? jikanData.studios[0].name : 'Studio';
-
-    let trailerEmbed = '';
-    if (jikanData.trailer && jikanData.trailer.embed_url) {
-      trailerEmbed = jikanData.trailer.embed_url;
-    } else if (jikanData.trailer && jikanData.trailer.youtube_id) {
-      trailerEmbed = `https://www.youtube.com/embed/${jikanData.trailer.youtube_id}`;
-    }
-
-    return {
-      id: idSlug,
-      title: jikanData.title || jikanData.title_english || 'Untitled',
-      alternativeTitles: [
-        jikanData.title_english,
-        jikanData.title_japanese
-      ].filter(Boolean),
-      cover: jikanData.images?.webp?.large_image_url || jikanData.images?.jpg?.large_image_url || '',
-      banner: jikanData.images?.webp?.large_image_url || jikanData.images?.jpg?.large_image_url || '',
-      score: jikanData.score ? Number(jikanData.score) : 8.0,
-      year: jikanData.year || (jikanData.aired?.from ? new Date(jikanData.aired.from).getFullYear() : 2024),
-      season: jikanData.season ? (jikanData.season.charAt(0).toUpperCase() + jikanData.season.slice(1)) : 'Musim Dingin',
-      type: jikanData.type === 'Movie' ? 'Film' : 'Serial',
-      status: jikanData.status === 'Finished Airing' ? 'finished' : 'ongoing',
-      statusText: jikanData.status === 'Finished Airing' ? 'Tamat' : 'Sedang berlangsung',
-      studio: studio,
-      episodes: jikanData.episodes || 12,
-      duration: jikanData.duration || '24 min',
-      genres: genres.length ? genres : ['Aksi', 'Petualangan'],
-      trailerUrl: trailerEmbed,
-      sinopsis: jikanData.synopsis ? [jikanData.synopsis] : ['Sinopsis belum tersedia.'],
-      mal: {
-        id: jikanData.mal_id,
-        url: jikanData.url
+      let trailerUrl = '';
+      if (attr.youtubeVideoId) {
+        trailerUrl = `https://www.youtube.com/embed/${attr.youtubeVideoId}`;
       }
-    };
+
+      return {
+        id: idSlug,
+        title: title,
+        alternativeTitles: [attr.titles?.en, attr.titles?.ja_jp].filter(Boolean),
+        cover: attr.posterImage?.large || attr.posterImage?.original || '',
+        banner: attr.coverImage?.large || attr.posterImage?.original || '',
+        score: score,
+        year: attr.startDate ? new Date(attr.startDate).getFullYear() : 2024,
+        season: 'Musim Dingin',
+        type: attr.subtype === 'movie' ? 'Film' : 'Serial',
+        status: attr.status === 'finished' ? 'finished' : 'ongoing',
+        statusText: attr.status === 'finished' ? 'Tamat' : 'Sedang tayang',
+        studio: 'Studio',
+        episodes: attr.episodeCount || 12,
+        duration: attr.episodeLength ? `${attr.episodeLength} min` : '24 min',
+        genres: ['Aksi', 'Petualangan'],
+        trailerUrl: trailerUrl,
+        sinopsis: attr.synopsis ? [attr.synopsis] : ['Sinopsis belum tersedia.'],
+        mal: {
+          id: item.id,
+          url: `https://kitsu.io/anime/${item.id}`
+        }
+      };
+    });
   },
 
   mapAniListToAniwave(item) {
@@ -157,7 +194,6 @@ export const jikanSyncService = {
       trailerEmbed = `https://www.youtube.com/embed/${item.trailer.id}`;
     }
 
-    // Bersihkan tag HTML dari deskripsi jika ada
     const cleanDesc = (item.description || '')
       .replace(/<br\s*\/?>/gi, '\n')
       .replace(/<[^>]+>/g, '')
@@ -174,7 +210,7 @@ export const jikanSyncService = {
       season: item.season || 'Musim Dingin',
       type: item.format === 'MOVIE' ? 'Film' : 'Serial',
       status: item.status === 'FINISHED' ? 'finished' : 'ongoing',
-      statusText: item.status === 'FINISHED' ? 'Tamat' : 'Sedang berlangsung',
+      statusText: item.status === 'FINISHED' ? 'Tamat' : 'Sedang tayang',
       studio: studio,
       episodes: item.episodes || 12,
       duration: item.duration ? `${item.duration} min` : '24 min',

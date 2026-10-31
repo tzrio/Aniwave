@@ -1,14 +1,14 @@
 {
-  "name": "Aniwave",
-  "short_name": "Aniwave",
-  "description": "Platform Katalog & Temukan Anime Legal Resmi",
+  "name": "SMILEORA",
+  "short_name": "SMILEORA",
+  "description": "Where Stories Create Smiles. A universe of stories, emotions, and unforgettable adventures by SMILEON.",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0b0c10",
-  "theme_color": "#e50914",
+  "background_color": "#0B0D17",
+  "theme_color": "#A78BFA",
   "icons": [
     {
-      "src": "assets/img/aniwave-mark.svg",
+      "src": "assets/img/smileora-mark.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml"
     }

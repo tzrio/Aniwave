@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0D17"/>
+      <stop offset="100%" stop-color="#111426"/>
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="overlay-grad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#0B0D17"/>
+      <stop offset="70%" stop-color="#0B0D17" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0B0D17" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Browser Window Frame -->
+  <rect width="1200" height="675" rx="16" fill="url(#bg-grad)"/>
+
+  <!-- Browser Chrome Top Bar -->
+  <rect width="1200" height="42" fill="#191D31" rx="16"/>
+  <rect y="26" width="1200" height="16" fill="#191D31"/>
+  <circle cx="28" cy="21" r="6" fill="#EF4444"/>
+  <circle cx="48" cy="21" r="6" fill="#F59E0B"/>
+  <circle cx="68" cy="21" r="6" fill="#10B981"/>
+  <rect x="120" y="8" width="600" height="26" rx="6" fill="#111426"/>
+  <text x="140" y="25" font-family="-apple-system, sans-serif" font-size="12" fill="#A1A1B5">https://tzrio.github.io/Aniwave/index.html — SMILEORA Home</text>
+
+  <!-- SMILEORA Navbar -->
+  <g transform="translate(40, 56)">
+    <!-- Brand Badge -->
+    <rect width="140" height="38" rx="19" fill="#191D31" stroke="rgba(167,139,250,0.3)"/>
+    <circle cx="24" cy="19" r="10" fill="#7C5CFC"/>
+    <text x="44" y="24" font-family="-apple-system, sans-serif" font-weight="900" font-size="14" fill="#F8FAFC" letter-spacing="1">SMILE<tspan fill="#A78BFA">ORA</tspan></text>
+
+    <!-- Nav Links -->
+    <text x="240" y="24" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A78BFA">Beranda</text>
+    <text x="320" y="24" font-family="-apple-system, sans-serif" font-weight="600" font-size="13" fill="#A1A1B5">Serial Anime</text>
+    <text x="420" y="24" font-family="-apple-system, sans-serif" font-weight="600" font-size="13" fill="#A1A1B5">Film Layar Lebar</text>
+    <text x="540" y="24" font-family="-apple-system, sans-serif" font-weight="600" font-size="13" fill="#A1A1B5">Watchlist</text>
+
+    <!-- Auth Button -->
+    <rect x="990" y="0" width="130" height="38" rx="19" fill="url(#accent-grad)"/>
+    <text x="1018" y="24" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#FFFFFF">Masuk / Daftar</text>
+  </g>
+
+  <!-- Hero Showcase Banner -->
+  <g transform="translate(40, 114)">
+    <rect width="1120" height="300" rx="18" fill="#191D31" stroke="rgba(167,139,250,0.2)"/>
+    <!-- Simulated Backdrop Artwork -->
+    <rect width="1120" height="300" rx="18" fill="#222742"/>
+    <rect width="1120" height="300" rx="18" fill="url(#overlay-grad)"/>
+
+    <!-- Hero Content -->
+    <rect x="36" y="36" width="160" height="24" rx="4" fill="url(#accent-grad)"/>
+    <text x="46" y="52" font-family="-apple-system, sans-serif" font-weight="800" font-size="10" fill="#FFF" letter-spacing="1">SMILEORA SPOTLIGHT</text>
+    <rect x="204" y="36" width="70" height="24" rx="4" fill="#111426" stroke="rgba(167,139,250,0.3)"/>
+    <text x="216" y="52" font-family="-apple-system, sans-serif" font-weight="800" font-size="11" fill="#FACC15">★ 8.81</text>
+
+    <text x="36" y="105" font-family="-apple-system, sans-serif" font-weight="900" font-size="34" fill="#F8FAFC">Attack On Titan: The Final Season</text>
+    <text x="36" y="136" font-family="-apple-system, sans-serif" font-weight="600" font-size="13" fill="#A1A1B5">2020 &bull; MAPPA &bull; 16 Episode &bull; Shounen, Aksi, Fantasi</text>
+
+    <text x="36" y="174" font-family="-apple-system, sans-serif" font-size="13" fill="#A1A1B5">Setelah meraih kemenangan dari para titan, kebenaran di luar dinding dan identitas para titan akhirnya terungkap.</text>
+    <text x="36" y="196" font-family="-apple-system, sans-serif" font-size="13" fill="#A1A1B5">Pertempuran epik antara Pulau Paradis dan Kekaisaran Marley kini mencapai puncaknya.</text>
+
+    <!-- CTAs -->
+    <rect x="36" y="226" width="180" height="42" rx="21" fill="url(#accent-grad)"/>
+    <text x="56" y="252" font-family="-apple-system, sans-serif" font-weight="800" font-size="13" fill="#FFF">▶ Mulai Nonton (Ep 1)</text>
+
+    <rect x="226" y="226" width="160" height="42" rx="21" fill="#111426" stroke="rgba(167,139,250,0.3)"/>
+    <text x="250" y="252" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#F8FAFC">Lihat Detail Lengkap</text>
+  </g>
+
+  <!-- Anime Catalog Cards Row -->
+  <g transform="translate(40, 434)">
+    <text x="0" y="24" font-family="-apple-system, sans-serif" font-weight="900" font-size="18" fill="#F8FAFC">Koleksi Anime Terbaru</text>
+
+    <!-- Card 1 -->
+    <g transform="translate(0, 42)">
+      <rect width="170" height="180" rx="10" fill="#191D31" stroke="rgba(167,139,250,0.15)"/>
+      <rect width="170" height="120" rx="10" fill="#2C3354"/>
+      <rect x="8" y="8" width="48" height="20" rx="4" fill="url(#accent-grad)"/>
+      <text x="14" y="22" font-family="-apple-system, sans-serif" font-weight="800" font-size="9" fill="#FFF">SERIAL</text>
+      <text x="10" y="146" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#F8FAFC">Dr. Stone (S1)</text>
+      <text x="10" y="166" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">2019 &bull; ★ 8.28</text>
+    </g>
+
+    <!-- Card 2 -->
+    <g transform="translate(190, 42)">
+      <rect width="170" height="180" rx="10" fill="#191D31" stroke="rgba(167,139,250,0.15)"/>
+      <rect width="170" height="120" rx="10" fill="#2C3354"/>
+      <rect x="8" y="8" width="48" height="20" rx="4" fill="url(#accent-grad)"/>
+      <text x="14" y="22" font-family="-apple-system, sans-serif" font-weight="800" font-size="9" fill="#FFF">SERIAL</text>
+      <text x="10" y="146" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#F8FAFC">The Promised Neverland</text>
+      <text x="10" y="166" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">2019 &bull; ★ 8.52</text>
+    </g>
+
+    <!-- Card 3 -->
+    <g transform="translate(380, 42)">
+      <rect width="170" height="180" rx="10" fill="#191D31" stroke="rgba(167,139,250,0.15)"/>
+      <rect width="170" height="120" rx="10" fill="#2C3354"/>
+      <rect x="8" y="8" width="38" height="20" rx="4" fill="url(#accent-grad)"/>
+      <text x="14" y="22" font-family="-apple-system, sans-serif" font-weight="800" font-size="9" fill="#FFF">FILM</text>
+      <text x="10" y="146" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#F8FAFC">Your Name (Kimi no Na wa)</text>
+      <text x="10" y="166" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">2016 &bull; ★ 8.84</text>
+    </g>
+
+    <!-- Card 4 -->
+    <g transform="translate(570, 42)">
+      <rect width="170" height="180" rx="10" fill="#191D31" stroke="rgba(167,139,250,0.15)"/>
+      <rect width="170" height="120" rx="10" fill="#2C3354"/>
+      <rect x="8" y="8" width="48" height="20" rx="4" fill="url(#accent-grad)"/>
+      <text x="14" y="22" font-family="-apple-system, sans-serif" font-weight="800" font-size="9" fill="#FFF">SERIAL</text>
+      <text x="10" y="146" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#F8FAFC">Attack on Titan (S3 P2)</text>
+      <text x="10" y="166" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">2019 &bull; ★ 9.05</text>
+    </g>
+
+    <!-- Card 5 -->
+    <g transform="translate(760, 42)">
+      <rect width="170" height="180" rx="10" fill="#191D31" stroke="rgba(167,139,250,0.15)"/>
+      <rect width="170" height="120" rx="10" fill="#2C3354"/>
+      <rect x="8" y="8" width="48" height="20" rx="4" fill="url(#accent-grad)"/>
+      <text x="14" y="22" font-family="-apple-system, sans-serif" font-weight="800" font-size="9" fill="#FFF">SERIAL</text>
+      <text x="10" y="146" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#F8FAFC">Dr. Stone: Stone Wars</text>
+      <text x="10" y="166" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">2021 &bull; ★ 8.11</text>
+    </g>
+
+    <!-- Card 6 -->
+    <g transform="translate(950, 42)">
+      <rect width="170" height="180" rx="10" fill="#191D31" stroke="rgba(167,139,250,0.15)"/>
+      <rect width="170" height="120" rx="10" fill="#2C3354"/>
+      <rect x="8" y="8" width="48" height="20" rx="4" fill="url(#accent-grad)"/>
+      <text x="14" y="22" font-family="-apple-system, sans-serif" font-weight="800" font-size="9" fill="#FFF">SERIAL</text>
+      <text x="10" y="146" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#F8FAFC">Dr. Stone: New World</text>
+      <text x="10" y="166" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">2023 &bull; ★ 8.27</text>
+    </g>
+  </g>
+</svg>

@@ -1,9 +1,9 @@
 /**
- * Aniwave Data Repository & Admin CRUD Service
- * Triple-Tier Architecture:
- * 1. Cloud Firestore (Firebase) if configured
- * 2. LocalStorage Overrides (for client modifications)
- * 3. Static data/anime.json Baseline (reliable zero-failure fallback)
+ * SMILEORA Data Repository & Admin CRUD Service
+ * Unified Architecture:
+ * - Firebase Firestore (Cloud persistence & live delete)
+ * - LocalStorage tombstone tracking (Clean UI updates)
+ * - Local JSON fallback
  */
 import { CONFIG } from './config.js';
 import { firebaseService } from './firebaseService.js';
@@ -14,29 +14,43 @@ export const animeService = {
   async getAllAnime() {
     if (this.dataCache) return this.dataCache;
 
-    // 1. Try Cloud Firebase first if available
-    const cloudData = await firebaseService.fetchAllAnime();
-    if (cloudData && Object.keys(cloudData).length > 0) {
-      this.dataCache = cloudData;
-      return cloudData;
-    }
-
-    // 2. Fallback to static baseline JSON
-    let baseline = {};
-    try {
-      const res = await fetch('data/anime.json', { cache: 'no-cache' });
-      if (res.ok) {
-        baseline = await res.json();
-      }
-    } catch (e) {
-      console.warn('Gagal memuat baseline anime.json:', e);
-    }
-
-    // 3. Merge local overrides
     const overrides = this.getOverrides();
-    const merged = { ...baseline, ...overrides };
-    this.dataCache = merged;
-    return merged;
+    let merged = {};
+
+    // 1. Coba ambil dari Cloud Firebase Firestore
+    const cloudData = await firebaseService.fetchAllAnime();
+
+    if (cloudData && Object.keys(cloudData).length > 0) {
+      merged = { ...cloudData };
+    } else {
+      // 2. Fallback baca file lokal data/anime.json jika Firebase offline
+      try {
+        const res = await fetch('data/anime.json', { cache: 'no-cache' });
+        if (res.ok) {
+          merged = await res.json();
+        }
+      } catch (e) {
+        console.warn('Gagal memuat baseline anime.json:', e);
+      }
+    }
+
+    // 3. Terapkan local overrides & tombstones (hapus anime yang ditandai _deleted)
+    for (const [k, v] of Object.entries(overrides)) {
+      if (v._deleted) {
+        delete merged[k];
+      } else {
+        merged[k] = v;
+      }
+    }
+
+    // Filter dokumen deleted jika terbawa
+    const clean = {};
+    for (const [k, v] of Object.entries(merged)) {
+      if (!v._deleted) clean[k] = v;
+    }
+
+    this.dataCache = clean;
+    return clean;
   },
 
   async getAnimeById(id) {
@@ -55,15 +69,20 @@ export const animeService = {
 
   saveOverrides(overrides) {
     localStorage.setItem(CONFIG.storageKeys.adminDataOverride, JSON.stringify(overrides));
-    this.dataCache = null; // Invalidate cache
+    this.dataCache = null; // Invalidate cache agar tabel langsung render data terkini
   },
 
-  // Admin: Save or update an anime entry
-  async saveAnime(animeRecord) {
+  // Admin: Simpan atau Edit Anime
+  async saveAnime(animeRecord, oldId = null) {
     if (!animeRecord.id) throw new Error('ID Anime wajib diisi.');
     if (!animeRecord.title) throw new Error('Judul Anime wajib diisi.');
 
-    // 1. Sync to Firebase if online
+    // Jika saat edit ID-nya berubah, hapus ID yang lama agar tidak ganda
+    if (oldId && oldId !== animeRecord.id) {
+      await this.deleteAnime(oldId);
+    }
+
+    // 1. Simpan langsung ke Firebase Firestore Cloud
     if (firebaseService.isOnline) {
       try {
         await firebaseService.saveAnime(animeRecord);
@@ -72,10 +91,11 @@ export const animeService = {
       }
     }
 
-    // 2. Persist locally
+    // 2. Simpan ke local overrides
     const overrides = this.getOverrides();
     overrides[animeRecord.id] = {
       ...animeRecord,
+      _deleted: false,
       updatedAt: new Date().toISOString()
     };
 
@@ -83,32 +103,35 @@ export const animeService = {
     return overrides[animeRecord.id];
   },
 
-  // Admin: Delete an anime entry
+  // Admin: Hapus Anime Permanen (di Cloud Firestore & Local)
   async deleteAnime(animeId) {
-    const overrides = this.getOverrides();
-    const all = await this.getAllAnime();
-
-    if (!all[animeId]) return false;
-
-    if (overrides[animeId]) {
-      delete overrides[animeId];
+    // 1. Hapus dari Firestore Cloud
+    if (firebaseService.isOnline) {
+      try {
+        await firebaseService.deleteAnime(animeId);
+      } catch (e) {
+        console.warn('Firestore delete error:', e);
+      }
     }
+
+    // 2. Beri penanda tombstone _deleted di LocalStorage agar tidak muncul dari anime.json
+    const overrides = this.getOverrides();
     overrides[animeId] = { _deleted: true };
     this.saveOverrides(overrides);
+
+    // 3. Bersihkan dari memory cache
+    if (this.dataCache && this.dataCache[animeId]) {
+      delete this.dataCache[animeId];
+    }
+
     return true;
   },
 
-  // Admin: Export complete dataset to JSON
   async exportFullDataset() {
     const all = await this.getAllAnime();
-    const clean = {};
-    for (const [k, v] of Object.entries(all)) {
-      if (!v._deleted) clean[k] = v;
-    }
-    return JSON.stringify(clean, null, 2);
+    return JSON.stringify(all, null, 2);
   },
 
-  // Admin: Import dataset
   async importDataset(jsonString) {
     const parsed = JSON.parse(jsonString);
     if (typeof parsed !== 'object' || parsed === null) throw new Error('Format JSON tidak valid.');

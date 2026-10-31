@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="watch-bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0D17"/>
+      <stop offset="100%" stop-color="#111426"/>
+    </linearGradient>
+    <linearGradient id="watch-accent-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Window Frame -->
+  <rect width="1200" height="675" rx="16" fill="url(#watch-bg-grad)"/>
+
+  <!-- Browser Chrome Top Bar -->
+  <rect width="1200" height="42" fill="#191D31" rx="16"/>
+  <rect y="26" width="1200" height="16" fill="#191D31"/>
+  <circle cx="28" cy="21" r="6" fill="#EF4444"/>
+  <circle cx="48" cy="21" r="6" fill="#F59E0B"/>
+  <circle cx="68" cy="21" r="6" fill="#10B981"/>
+  <rect x="120" y="8" width="600" height="26" rx="6" fill="#111426"/>
+  <text x="140" y="25" font-family="-apple-system, sans-serif" font-size="12" fill="#A1A1B5">https://tzrio.github.io/Aniwave/watch.html#id=aot-s4&amp;ep=1 — Universal Player</text>
+
+  <!-- SMILEORA Navbar -->
+  <g transform="translate(40, 56)">
+    <rect width="140" height="38" rx="19" fill="#191D31" stroke="rgba(167,139,250,0.3)"/>
+    <circle cx="24" cy="19" r="10" fill="#7C5CFC"/>
+    <text x="44" y="24" font-family="-apple-system, sans-serif" font-weight="900" font-size="14" fill="#F8FAFC" letter-spacing="1">SMILE<tspan fill="#A78BFA">ORA</tspan></text>
+    <text x="210" y="24" font-family="-apple-system, sans-serif" font-weight="600" font-size="13" fill="#A78BFA">&larr; Kembali ke Beranda</text>
+  </g>
+
+  <!-- Player Title Header -->
+  <g transform="translate(40, 114)">
+    <text x="0" y="22" font-family="-apple-system, sans-serif" font-weight="900" font-size="22" fill="#F8FAFC">Attack On Titan: The Final Season</text>
+    <text x="0" y="44" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A78BFA">Sedang Memutar: Episode 1 (The Other Side of the Sea)</text>
+
+    <!-- Prev & Next Buttons -->
+    <rect x="910" y="8" width="90" height="34" rx="17" fill="#191D31" stroke="rgba(167,139,250,0.2)"/>
+    <text x="926" y="30" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#A1A1B5">&larr; Ep Lalu</text>
+
+    <rect x="1010" y="8" width="110" height="34" rx="17" fill="#191D31" stroke="rgba(167,139,250,0.3)"/>
+    <text x="1022" y="30" font-family="-apple-system, sans-serif" font-weight="700" font-size="12" fill="#A78BFA">Ep Lanjut &rarr;</text>
+  </g>
+
+  <!-- Video Player + Server Toolbar (Left 780px) -->
+  <g transform="translate(40, 175)">
+    <rect width="780" height="438" rx="12" fill="#000000" stroke="rgba(167,139,250,0.25)"/>
+
+    <!-- Player Center Play Icon Simulation -->
+    <circle cx="390" cy="195" r="36" fill="rgba(124,92,252,0.85)"/>
+    <polygon points="382,180 406,195 382,210" fill="#FFFFFF"/>
+
+    <!-- Player Control Bar Simulation -->
+    <rect y="350" width="780" height="40" fill="rgba(17,20,38,0.95)"/>
+    <rect x="20" y="358" width="740" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
+    <rect x="20" y="358" width="280" height="4" rx="2" fill="url(#watch-accent-grad)"/>
+    <circle cx="300" cy="360" r="6" fill="#F8FAFC"/>
+    <text x="24" y="380" font-family="-apple-system, sans-serif" font-size="11" fill="#A1A1B5">08:45 / 23:50 &bull; 1080p Full HD &bull; Subtitle: Indonesia</text>
+
+    <!-- Player Bottom Server Toolbar -->
+    <rect y="390" width="780" height="48" fill="#191D31" rx="0 0 12 12"/>
+    <text x="20" y="420" font-family="-apple-system, sans-serif" font-weight="800" font-size="11" fill="#A1A1B5" letter-spacing="0.5">PILIH SERVER:</text>
+
+    <!-- Active Server Button -->
+    <rect x="130" y="402" width="140" height="28" rx="6" fill="url(#watch-accent-grad)"/>
+    <text x="142" y="420" font-family="-apple-system, sans-serif" font-weight="700" font-size="11" fill="#FFF">Server Aurora (HLS)</text>
+
+    <!-- Backup Server Button -->
+    <rect x="280" y="402" width="140" height="28" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="292" y="420" font-family="-apple-system, sans-serif" font-weight="600" font-size="11" fill="#A1A1B5">Server Zenith (Embed)</text>
+
+    <!-- Cinema Mode Button -->
+    <rect x="650" y="402" width="110" height="28" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="664" y="420" font-family="-apple-system, sans-serif" font-weight="600" font-size="11" fill="#F8FAFC">💡 Mode Bioskop</text>
+  </g>
+
+  <!-- Episode Sidebar (Right 310px) -->
+  <g transform="translate(845, 175)">
+    <rect width="315" height="438" rx="12" fill="#191D31" stroke="rgba(167,139,250,0.2)"/>
+    <text x="20" y="32" font-family="-apple-system, sans-serif" font-weight="900" font-size="15" fill="#F8FAFC">Daftar Episode</text>
+    <rect x="235" y="16" width="60" height="22" rx="4" fill="#111426"/>
+    <text x="248" y="31" font-family="-apple-system, sans-serif" font-weight="700" font-size="11" fill="#A78BFA">16 Ep</text>
+
+    <!-- Grid Episode Buttons -->
+    <!-- Row 1 -->
+    <rect x="20" y="52" width="55" height="38" rx="6" fill="url(#watch-accent-grad)"/>
+    <text x="43" y="76" font-family="-apple-system, sans-serif" font-weight="800" font-size="13" fill="#FFF">1</text>
+
+    <rect x="85" y="52" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="108" y="76" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">2</text>
+
+    <rect x="150" y="52" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="173" y="76" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">3</text>
+
+    <rect x="215" y="52" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="238" y="76" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">4</text>
+
+    <!-- Row 2 -->
+    <rect x="20" y="100" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="43" y="124" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">5</text>
+    <rect x="85" y="100" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="108" y="124" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">6</text>
+    <rect x="150" y="100" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="173" y="124" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">7</text>
+    <rect x="215" y="100" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="238" y="124" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">8</text>
+
+    <!-- Row 3 -->
+    <rect x="20" y="148" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="43" y="172" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">9</text>
+    <rect x="85" y="148" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="104" y="172" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">10</text>
+    <rect x="150" y="148" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="170" y="172" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">11</text>
+    <rect x="215" y="148" width="55" height="38" rx="6" fill="#111426" stroke="rgba(167,139,250,0.2)"/>
+    <text x="234" y="172" font-family="-apple-system, sans-serif" font-weight="700" font-size="13" fill="#A1A1B5">12</text>
+  </g>
+</svg>

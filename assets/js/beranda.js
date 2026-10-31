@@ -28,6 +28,7 @@ async function initHomepage() {
   try {
     allAnimeData = await animeService.getAllAnime();
     setupHeroShowcase();
+    setupContinueWatching();
     populateGenreFilter();
     readUrlParams();
     bindEvents();
@@ -65,11 +66,54 @@ function setupHeroShowcase() {
   if (synopsis) synopsis.textContent = Array.isArray(anime.sinopsis) ? anime.sinopsis.join(' ') : anime.sinopsis;
   if (ctaDetail) ctaDetail.href = `anime.html#${encodeURIComponent(anime.id || featuredId)}`;
 
+  const ctaPlay = document.getElementById('hero-cta-play');
+  if (ctaPlay) ctaPlay.href = `watch.html#id=${encodeURIComponent(anime.id || featuredId)}&ep=1`;
+
   if (btnTrailer && anime.trailerUrl) {
     btnTrailer.addEventListener('click', () => {
       openTrailerModal(anime.trailerUrl);
     });
   }
+}
+
+// 1.5 Setup Continue Watching Row from Local History
+function setupContinueWatching() {
+  const section = document.getElementById('continue-watching-section');
+  const container = document.getElementById('continue-watching-list');
+  if (!section || !container) return;
+
+  try {
+    const raw = localStorage.getItem('smileora_history');
+    if (!raw) return;
+    const history = JSON.parse(raw);
+    const entries = Object.values(history).filter(item => allAnimeData[item.animeId]);
+
+    if (entries.length === 0) return;
+
+    section.style.display = 'block';
+    container.innerHTML = '';
+
+    entries.forEach(item => {
+      const anime = allAnimeData[item.animeId];
+      const card = document.createElement('a');
+      card.href = `watch.html#id=${encodeURIComponent(item.animeId)}&ep=${item.episodeNumber || 1}`;
+      card.className = 'continue-card';
+
+      card.innerHTML = `
+        <div class="continue-thumb-wrap">
+          <img class="continue-thumb" src="${anime.banner || anime.cover}" alt="${escapeHtml(anime.title)}" />
+          <div class="continue-progress-bar">
+            <div class="continue-progress-fill" style="width:${item.completed ? '100%' : '60%'};"></div>
+          </div>
+        </div>
+        <div class="continue-body">
+          <div class="continue-title">${escapeHtml(anime.title)}</div>
+          <div class="continue-ep">Episode ${item.episodeNumber || 1} &bull; Lanjutkan</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  } catch (e) {}
 }
 
 // 2. Populate Genre Filter dropdown dynamically

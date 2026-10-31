@@ -1,26 +1,31 @@
 /* ==========================================================================
-   Aniwave Design Tokens & Modern Theme System
-   Commercial White-Label Ready, Supports Dark/Light Modes
+   SMILEORA Design System & Brand Theme
+   Brand: SMILEORA | Parent: SMILEON
+   Palette: Deep Nebula Navy (#0B0D17) + Aurora Purple (#A78BFA / #7C5CFC)
    ========================================================================== */
 
 :root {
-  /* Brand Accent Tokens */
-  --color-primary: #e50914;
-  --color-primary-hover: #ff2a34;
-  --color-primary-rgb: 229, 9, 20;
-  --color-primary-glow: rgba(229, 9, 20, 0.35);
+  /* Brand Tokens */
+  --color-primary: #A78BFA;
+  --color-primary-hover: #C4B5FD;
+  --color-primary-dark: #7C5CFC;
+  --color-primary-rgb: 167, 139, 250;
+  --color-primary-glow: rgba(167, 139, 250, 0.35);
+
+  --color-accent: #7C5CFC;
+  --color-accent-glow: rgba(124, 92, 252, 0.45);
 
   /* Functional Accents */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #38BDF8;
 
   /* Typography */
   --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Spacing Scale */
+  /* Spacing */
   --space-2xs: 4px;
   --space-xs: 8px;
   --space-sm: 12px;
@@ -33,68 +38,71 @@
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 18px;
+  --radius-xl: 24px;
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px var(--color-primary-glow);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 24px var(--color-primary-glow);
+  --shadow-glow-accent: 0 0 30px var(--color-accent-glow);
 
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
-  --transition-slow: 400ms ease;
+  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Layout Max Width */
-  --max-content-width: 1280px;
+  --max-content-width: 1320px;
 }
 
 /* ==========================================================================
-   Dark Theme (Default Production Theme)
+   Dark Theme (Default Production Theme - Deep Aurora & Space)
    ========================================================================== */
 :root,
 [data-theme="dark"] {
-  --color-bg: #0b0c10;
-  --color-bg-secondary: #12141c;
-  --color-surface: #171924;
-  --color-surface-hover: #212435;
-  --color-surface-active: #2a2e42;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-focus: rgba(229, 9, 20, 0.5);
+  --color-bg: #0B0D17;
+  --color-bg-secondary: #111426;
+  --color-surface: #191D31;
+  --color-surface-hover: #222742;
+  --color-surface-active: #2C3354;
+  --color-border: rgba(167, 139, 250, 0.12);
+  --color-border-focus: rgba(167, 139, 250, 0.6);
 
-  --color-text-main: #f3f4f6;
-  --color-text-muted: #9ca3af;
-  --color-text-subtle: #6b7280;
-  --color-text-inverse: #0b0c10;
+  --color-text-main: #F8FAFC;
+  --color-text-muted: #A1A1B5;
+  --color-text-subtle: #6B7280;
+  --color-text-inverse: #0B0D17;
 
-  --nav-backdrop: rgba(11, 12, 16, 0.85);
-  --modal-backdrop: rgba(0, 0, 0, 0.75);
+  --nav-backdrop: rgba(11, 13, 23, 0.88);
+  --modal-backdrop: rgba(5, 7, 15, 0.82);
+  --aurora-gradient: linear-gradient(135deg, rgba(124, 92, 252, 0.15) 0%, rgba(167, 139, 250, 0.05) 50%, transparent 100%);
 }
 
 /* ==========================================================================
-   Light Theme Support
+   Light Theme (Aurora Twilight)
    ========================================================================== */
 [data-theme="light"] {
-  --color-bg: #f8fafc;
-  --color-bg-secondary: #f1f5f9;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f8fafc;
-  --color-surface-active: #e2e8f0;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-focus: rgba(229, 9, 20, 0.4);
+  --color-bg: #F5F6FA;
+  --color-bg-secondary: #ECEEF6;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F8F9FD;
+  --color-surface-active: #E4E7F2;
+  --color-border: rgba(124, 92, 252, 0.14);
+  --color-border-focus: rgba(124, 92, 252, 0.5);
 
-  --color-text-main: #0f172a;
-  --color-text-muted: #475569;
-  --color-text-subtle: #94a3b8;
-  --color-text-inverse: #ffffff;
+  --color-text-main: #0F1322;
+  --color-text-muted: #4B5268;
+  --color-text-subtle: #8A92A8;
+  --color-text-inverse: #FFFFFF;
 
-  --nav-backdrop: rgba(248, 250, 252, 0.85);
-  --modal-backdrop: rgba(15, 23, 42, 0.6);
+  --nav-backdrop: rgba(245, 246, 250, 0.88);
+  --modal-backdrop: rgba(15, 19, 34, 0.65);
+  --aurora-gradient: linear-gradient(135deg, rgba(124, 92, 252, 0.08) 0%, rgba(167, 139, 250, 0.03) 50%, transparent 100%);
 }
 
 /* ==========================================================================
-   Base Elements & Reset
+   Base Elements
    ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -118,6 +126,10 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text-main);
   overflow-x: hidden;
+  background-image:
+    radial-gradient(1000px 600px at 15% 10%, rgba(124, 92, 252, 0.08), transparent 70%),
+    radial-gradient(800px 500px at 85% 30%, rgba(167, 139, 250, 0.06), transparent 60%);
+  background-attachment: fixed;
 }
 
 a {
@@ -159,7 +171,6 @@ ul, ol {
   border: 0;
 }
 
-/* App Container */
 .app-container {
   width: 100%;
   max-width: var(--max-content-width);
@@ -167,21 +178,20 @@ ul, ol {
   padding: 0 var(--space-md);
 }
 
-/* Main Content Area */
 main {
   flex: 1;
 }
 
 /* ==========================================================================
-   Modern Header Navigation
+   Header Navigation
    ========================================================================== */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
   background: var(--nav-backdrop);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--color-border);
   transition: background-color var(--transition-normal);
 }
@@ -190,7 +200,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 68px;
+  height: 72px;
   gap: var(--space-md);
 }
 
@@ -198,25 +208,39 @@ main {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  text-decoration: none;
 }
 
 .nav-brand-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: var(--color-primary);
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(25, 29, 49, 0.95), rgba(17, 20, 38, 0.95));
+  border: 1px solid var(--color-border);
   color: #fff;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.nav-brand-badge:hover {
+  border-color: var(--color-primary);
   box-shadow: var(--shadow-glow);
 }
 
 .nav-brand-logo {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
+}
+
+.nav-brand-text {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #F8FAFC 60%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nav-links {
@@ -226,15 +250,29 @@ main {
 }
 
 .nav-link {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   color: var(--color-text-muted);
   transition: color var(--transition-fast);
+  padding: 6px 0;
+  position: relative;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  color: var(--color-primary-hover);
+  color: var(--color-primary);
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-glow);
 }
 
 .nav-actions {
@@ -243,7 +281,7 @@ main {
   gap: var(--space-sm);
 }
 
-/* Icon Buttons */
+/* Buttons */
 .btn-icon {
   display: inline-flex;
   align-items: center;
@@ -260,17 +298,16 @@ main {
 .btn-icon:hover {
   background: var(--color-surface-hover);
   border-color: var(--color-border-focus);
-  color: var(--color-primary-hover);
+  color: var(--color-primary);
 }
 
-/* Primary Button */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: 8px 18px;
-  background: var(--color-primary);
+  padding: 9px 20px;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   color: #fff;
   font-weight: 700;
   font-size: 0.9rem;
@@ -280,8 +317,8 @@ main {
 }
 
 .btn-primary:hover {
-  background: var(--color-primary-hover);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-accent);
 }
 
 .btn-secondary {
@@ -289,7 +326,7 @@ main {
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: 8px 16px;
+  padding: 9px 18px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   color: var(--color-text-main);
@@ -302,6 +339,7 @@ main {
 .btn-secondary:hover {
   background: var(--color-surface-hover);
   border-color: var(--color-border-focus);
+  color: var(--color-primary);
 }
 
 /* ==========================================================================
@@ -309,7 +347,7 @@ main {
    ========================================================================== */
 .hero-banner {
   position: relative;
-  min-height: 440px;
+  min-height: 460px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   margin: var(--space-lg) 0;
@@ -337,8 +375,8 @@ main {
   background: linear-gradient(
     0deg,
     var(--color-bg) 0%,
-    rgba(11, 12, 16, 0.8) 40%,
-    rgba(11, 12, 16, 0.2) 100%
+    rgba(11, 13, 23, 0.85) 45%,
+    rgba(11, 13, 23, 0.25) 100%
   );
 }
 
@@ -346,7 +384,7 @@ main {
   position: relative;
   z-index: 2;
   padding: var(--space-xl);
-  max-width: 680px;
+  max-width: 720px;
 }
 
 .hero-badge-row {
@@ -354,16 +392,17 @@ main {
   align-items: center;
   gap: var(--space-xs);
   margin-bottom: var(--space-sm);
+  flex-wrap: wrap;
 }
 
 .badge-tag {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   padding: 4px 10px;
   border-radius: var(--radius-sm);
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
   color: #fff;
 }
 
@@ -374,7 +413,7 @@ main {
 }
 
 .hero-title {
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   font-weight: 900;
   line-height: 1.15;
   margin-bottom: var(--space-sm);
@@ -410,7 +449,82 @@ main {
 }
 
 /* ==========================================================================
-   Filter & Search Toolbar
+   Continue Watching Carousel Row
+   ========================================================================== */
+.continue-watching-section {
+  margin-bottom: var(--space-xl);
+}
+
+.continue-card-row {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  padding-bottom: var(--space-sm);
+  scrollbar-width: thin;
+}
+
+.continue-card {
+  flex: 0 0 280px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.continue-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-border-focus);
+}
+
+.continue-thumb-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg-secondary);
+}
+
+.continue-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.continue-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.continue-progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  width: 65%;
+}
+
+.continue-body {
+  padding: 10px 14px;
+}
+
+.continue-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.continue-ep {
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Toolbar & Filters
    ========================================================================== */
 .toolbar-section {
   background: var(--color-surface);
@@ -477,7 +591,7 @@ main {
 }
 
 /* ==========================================================================
-   Anime Cards Grid & Presentation
+   Anime Cards Grid
    ========================================================================== */
 .section-title-row {
   display: flex;
@@ -500,7 +614,7 @@ main {
   display: inline-block;
   width: 4px;
   height: 22px;
-  background: var(--color-primary);
+  background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
   border-radius: var(--radius-full);
 }
 
@@ -556,7 +670,7 @@ main {
   font-weight: 800;
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
   color: #fff;
   letter-spacing: 0.04em;
 }
@@ -570,8 +684,8 @@ main {
   font-weight: 800;
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  background: rgba(0, 0, 0, 0.75);
-  color: #facc15;
+  background: rgba(11, 13, 23, 0.8);
+  color: #FACC15;
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -607,7 +721,7 @@ main {
 }
 
 /* ==========================================================================
-   Skeleton Shimmer Loaders
+   Skeleton Shimmer
    ========================================================================== */
 .skeleton {
   background: linear-gradient(
@@ -627,11 +741,11 @@ main {
 }
 
 /* ==========================================================================
-   Detail Page Specific Layout
+   Detail Page Specific
    ========================================================================== */
 .detail-hero {
   position: relative;
-  min-height: 380px;
+  min-height: 400px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   margin: var(--space-lg) 0;
@@ -640,7 +754,7 @@ main {
 
 .detail-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 290px 1fr;
   gap: var(--space-xl);
   margin-bottom: var(--space-2xl);
 }
@@ -714,14 +828,14 @@ main {
 }
 
 /* ==========================================================================
-   Modals & Toast Notifications
+   Modals & Toast
    ========================================================================== */
 .modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
   background: var(--modal-backdrop);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -754,7 +868,7 @@ main {
 }
 
 .modal-card-wide {
-  max-width: 860px;
+  max-width: 880px;
 }
 
 .modal-close {
@@ -805,7 +919,7 @@ main {
   box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
-/* Toast Container */
+/* Toast */
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -836,7 +950,7 @@ main {
 
 .toast.toast-success { border-left-color: var(--color-success); }
 .toast.toast-error { border-left-color: var(--color-danger); }
-.toast.toast-info { border-left-color: var(--color-info); }
+.toast.toast-info { border-left-color: var(--color-primary); }
 
 @keyframes toastIn {
   from { opacity: 0; transform: translateY(12px); }
@@ -864,7 +978,8 @@ main {
   color: var(--color-text-muted);
   font-size: 0.9rem;
   margin-top: var(--space-sm);
-  max-width: 320px;
+  max-width: 340px;
+  line-height: 1.6;
 }
 
 .footer-col-title {
@@ -885,7 +1000,7 @@ main {
 }
 
 .footer-links a:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-primary);
 }
 
 .footer-bottom {
@@ -896,6 +1011,8 @@ main {
   justify-content: space-between;
   font-size: 0.8rem;
   color: var(--color-text-subtle);
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 /* ==========================================================================
@@ -919,13 +1036,13 @@ main {
 
 @media (max-width: 640px) {
   .nav-links {
-    display: none; /* In production mobile drawer handles this */
+    display: none;
   }
   .toolbar-grid {
     grid-template-columns: 1fr;
   }
   .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   .hero-content {
     padding: var(--space-md);
@@ -939,7 +1056,6 @@ main {
   }
   .footer-bottom {
     flex-direction: column;
-    gap: 8px;
     text-align: center;
   }
 }

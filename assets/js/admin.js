@@ -1,6 +1,7 @@
 /**
- * Aniwave Admin Dashboard Controller
+ * SMILEORA Admin Dashboard Controller
  * Enforces admin authorization, manages CRUD operations, imports/exports
+ * Auto-Sync supports: Title Search, Direct MAL URL, and MAL ID with interactive picker
  */
 import { setupNavigation } from './navComponent.js';
 import { authService } from './authService.js';
@@ -14,10 +15,8 @@ let allAnimeData = {};
 async function initAdmin() {
   setupNavigation();
 
-  // Enforce Admin Access Control
   const user = authService.getCurrentUser();
   if (!user || user.role !== 'admin') {
-    // If not logged in as admin, prompt login or notify
     toastService.error('Akses ditolak. Silakan login sebagai administrator (admin / admin123).');
     const table = document.getElementById('admin-anime-table');
     if (table) {
@@ -25,7 +24,7 @@ async function initAdmin() {
         <tr>
           <td colspan="6" style="padding:40px; text-align:center;">
             <p style="color:var(--color-danger); font-weight:700; font-size:1.1rem; margin-bottom:12px;">🔒 Diperlukan Hak Akses Administrator</p>
-            <p style="color:var(--color-text-muted); font-size:0.9rem; margin-bottom:16px;">Gunakan kredensial <code>admin</code> dan password <code>admin123</code> untuk mengelola data katalog.</p>
+            <p style="color:var(--color-text-muted); font-size:0.9rem; margin-bottom:16px;">Gunakan akun <code>admin</code> dan password <code>admin123</code> untuk mengelola data katalog.</p>
           </td>
         </tr>
       `;
@@ -59,7 +58,7 @@ async function loadAndRenderAdmin() {
 
     tr.innerHTML = `
       <td style="padding:12px 16px; display:flex; align-items:center; gap:12px;">
-        <img src="${anime.cover || 'assets/img/aniwave-mark.svg'}" alt="" style="width:40px; height:56px; object-fit:cover; border-radius:4px;" />
+        <img src="${anime.cover || 'assets/img/smileora-mark.svg'}" alt="" style="width:40px; height:56px; object-fit:cover; border-radius:4px;" />
         <div>
           <div style="font-weight:700; color:var(--color-text-main); font-size:0.95rem;">${escapeHtml(anime.title)}</div>
           <div style="font-size:0.75rem; color:var(--color-text-subtle);">ID: ${escapeHtml(id)}</div>
@@ -68,7 +67,7 @@ async function loadAndRenderAdmin() {
       <td style="padding:12px 16px; font-size:0.85rem; font-weight:600;">${anime.type || 'Serial'}</td>
       <td style="padding:12px 16px; font-size:0.85rem; color:var(--color-text-muted);">${anime.year || '—'}</td>
       <td style="padding:12px 16px; font-size:0.85rem; color:var(--color-text-muted);">${anime.studio || '—'}</td>
-      <td style="padding:12px 16px; font-size:0.85rem; font-weight:700; color:#facc15;">★ ${anime.score || '—'}</td>
+      <td style="padding:12px 16px; font-size:0.85rem; font-weight:700; color:#FACC15;">★ ${anime.score || '—'}</td>
       <td style="padding:12px 16px; text-align:right;">
         <button class="btn-secondary btn-edit" data-id="${id}" style="padding:4px 10px; font-size:0.8rem; margin-right:4px;">Edit</button>
         <button class="btn-secondary btn-delete" data-id="${id}" style="padding:4px 10px; font-size:0.8rem; color:var(--color-danger); border-color:var(--color-danger);">Hapus</button>
@@ -77,7 +76,6 @@ async function loadAndRenderAdmin() {
     tbody.appendChild(tr);
   }
 
-  // Bind edit & delete buttons
   tbody.querySelectorAll('.btn-edit').forEach(btn => {
     btn.addEventListener('click', () => openEditForm(btn.dataset.id));
   });
@@ -112,42 +110,72 @@ function bindAdminEvents() {
     openCreateForm();
   });
 
-  // Auto-Sync Jikan / MAL
   document.getElementById('btn-sync-mal')?.addEventListener('click', () => {
     openCreateForm();
-    toastService.info('Masukkan judul anime di kolom pencarian MAL di dalam form.');
+    toastService.info('Tempelkan Link URL MAL atau ketik judul di kolom atas form.');
   });
 
+  // Auto-Sync Jikan / MAL / AniList Button
   document.getElementById('btn-fetch-mal')?.addEventListener('click', async () => {
     const q = document.getElementById('mal-search-query').value.trim();
     if (!q) {
-      toastService.error('Ketik judul anime terlebih dahulu.');
+      toastService.error('Ketik judul anime, ID MAL, atau tempelkan link URL MyAnimeList terlebih dahulu.');
       return;
     }
 
-    toastService.info(`Mencari data untuk "${q}" dari MyAnimeList...`);
+    toastService.info(`Mencari data untuk "${q}"...`);
+    const resultsContainer = document.getElementById('mal-search-results');
+
     try {
-      const results = await jikanSyncService.searchAnime(q);
-      if (results.length === 0) {
-        toastService.error('Anime tidak ditemukan di MyAnimeList.');
+      const results = await jikanSyncService.fetchByQueryOrUrl(q);
+      if (!results || results.length === 0) {
+        toastService.error('Anime tidak ditemukan. Pastikan judul benar atau coba tempelkan link URL MAL langsung.');
+        if (resultsContainer) resultsContainer.style.display = 'none';
         return;
       }
 
-      const match = results[0];
-      // Auto-fill form fields
-      document.getElementById('form-id').value = match.id;
-      document.getElementById('form-title').value = match.title;
-      document.getElementById('form-type').value = match.type;
-      document.getElementById('form-score').value = match.score;
-      document.getElementById('form-year').value = match.year;
-      document.getElementById('form-studio').value = match.studio;
-      document.getElementById('form-status').value = match.status;
-      document.getElementById('form-cover').value = match.cover;
-      document.getElementById('form-trailer').value = match.trailerUrl;
-      document.getElementById('form-genres').value = match.genres.join(', ');
-      document.getElementById('form-synopsis').value = match.sinopsis.join('\n');
+      // If exactly 1 match (e.g. from direct URL/ID), auto-fill directly
+      if (results.length === 1) {
+        fillFormWithAnime(results[0]);
+        if (resultsContainer) resultsContainer.style.display = 'none';
+        return;
+      }
 
-      toastService.success(`Data "${match.title}" berhasil diisi otomatis!`);
+      // Multiple results: show interactive choice list
+      if (resultsContainer) {
+        resultsContainer.innerHTML = '';
+        resultsContainer.style.display = 'block';
+
+        results.forEach(item => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.gap = '10px';
+          row.style.padding = '8px 12px';
+          row.style.borderBottom = '1px solid var(--color-border)';
+          row.style.cursor = 'pointer';
+          row.style.transition = 'background 0.15s ease';
+
+          row.onmouseenter = () => row.style.background = 'var(--color-surface-hover)';
+          row.onmouseleave = () => row.style.background = 'transparent';
+
+          row.innerHTML = `
+            <img src="${item.cover}" style="width:32px; height:46px; object-fit:cover; border-radius:3px;" />
+            <div style="flex:1;">
+              <strong style="font-size:0.85rem; color:var(--color-text-main);">${escapeHtml(item.title)}</strong>
+              <div style="font-size:0.75rem; color:var(--color-text-muted);">${item.year || '—'} &bull; ${item.type} &bull; ★ ${item.score || '—'}</div>
+            </div>
+            <button type="button" class="btn-primary" style="padding:4px 10px; font-size:0.75rem;">Pilih Ini</button>
+          `;
+
+          row.onclick = () => {
+            fillFormWithAnime(item);
+            resultsContainer.style.display = 'none';
+          };
+
+          resultsContainer.appendChild(row);
+        });
+      }
     } catch (err) {
       toastService.error(`Gagal sync data: ${err.message}`);
     }
@@ -188,7 +216,7 @@ function bindAdminEvents() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `aniwave_anime_catalog_${new Date().toISOString().slice(0,10)}.json`;
+    a.download = `smileora_anime_catalog_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
     toastService.success('Katalog berhasil diekspor.');
   });
@@ -232,6 +260,8 @@ function bindAdminEvents() {
       const genres = document.getElementById('form-genres').value.split(',').map(s => s.trim()).filter(Boolean);
       const synopsis = document.getElementById('form-synopsis').value.split('\n').filter(Boolean);
 
+      const oldId = document.getElementById('form-editing-old-id').value.trim();
+
       const record = {
         id,
         title,
@@ -240,9 +270,9 @@ function bindAdminEvents() {
         year,
         studio,
         status,
-        statusText: status === 'finished' ? 'Tamat' : 'Sedang berlangsung',
-        cover: cover || 'assets/img/aniwave-mark.svg',
-        banner: cover || 'assets/img/aniwave-mark.svg',
+        statusText: status === 'finished' ? 'Tamat' : 'Sedang tayang',
+        cover: cover || 'assets/img/smileora-mark.svg',
+        banner: cover || 'assets/img/smileora-mark.svg',
         trailerUrl,
         genres,
         sinopsis: synopsis.length ? synopsis : ['Sinopsis belum tersedia.'],
@@ -251,7 +281,7 @@ function bindAdminEvents() {
         ]
       };
 
-      await animeService.saveAnime(record);
+      await animeService.saveAnime(record, oldId);
       toastService.success(`Anime ${title} berhasil disimpan!`);
       modal.classList.remove('active');
       loadAndRenderAdmin();
@@ -261,8 +291,29 @@ function bindAdminEvents() {
   });
 }
 
+function fillFormWithAnime(match) {
+  // Hanya timpa ID jika kita sedang dalam mode "Tambah Baru", bukan saat edit ID yang sudah ada
+  const oldId = document.getElementById('form-editing-old-id').value;
+  if (!oldId) {
+    document.getElementById('form-id').value = match.id;
+  }
+  document.getElementById('form-title').value = match.title;
+  document.getElementById('form-type').value = match.type;
+  document.getElementById('form-score').value = match.score;
+  document.getElementById('form-year').value = match.year;
+  document.getElementById('form-studio').value = match.studio;
+  document.getElementById('form-status').value = match.status;
+  document.getElementById('form-cover').value = match.cover;
+  document.getElementById('form-trailer').value = match.trailerUrl;
+  document.getElementById('form-genres').value = match.genres.join(', ');
+  document.getElementById('form-synopsis').value = match.sinopsis.join('\n');
+
+  toastService.success(`Data "${match.title}" berhasil diisi otomatis!`);
+}
+
 function openCreateForm() {
   document.getElementById('form-modal-title').textContent = 'Tambah Anime Baru';
+  document.getElementById('form-editing-old-id').value = '';
   document.getElementById('form-id').readOnly = false;
   document.getElementById('form-id').value = '';
   document.getElementById('form-title').value = '';
@@ -273,6 +324,10 @@ function openCreateForm() {
   document.getElementById('form-trailer').value = '';
   document.getElementById('form-genres').value = 'Aksi, Petualangan';
   document.getElementById('form-synopsis').value = '';
+  document.getElementById('mal-search-query').value = '';
+
+  const results = document.getElementById('mal-search-results');
+  if (results) results.style.display = 'none';
 
   document.getElementById('anime-form-modal')?.classList.add('active');
 }
@@ -282,6 +337,7 @@ function openEditForm(animeId) {
   if (!anime) return;
 
   document.getElementById('form-modal-title').textContent = `Edit Anime — ${anime.title}`;
+  document.getElementById('form-editing-old-id').value = animeId;
   document.getElementById('form-id').value = animeId;
   document.getElementById('form-id').readOnly = true;
   document.getElementById('form-title').value = anime.title || '';
@@ -294,6 +350,10 @@ function openEditForm(animeId) {
   document.getElementById('form-trailer').value = anime.trailerUrl || '';
   document.getElementById('form-genres').value = (anime.genres || []).join(', ');
   document.getElementById('form-synopsis').value = Array.isArray(anime.sinopsis) ? anime.sinopsis.join('\n') : (anime.sinopsis || '');
+  document.getElementById('mal-search-query').value = '';
+
+  const results = document.getElementById('mal-search-results');
+  if (results) results.style.display = 'none';
 
   document.getElementById('anime-form-modal')?.classList.add('active');
 }

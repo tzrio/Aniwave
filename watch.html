@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nonton Anime — Aniwave</title>
-  <meta name="description" content="Streaming anime online dengan player responsif, multi-server switcher, dan kualitas HD terbaik di Aniwave." />
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <title>Streaming Video Player — SMILEORA</title>
+  <meta name="description" content="Streaming anime online dengan player adaptif HLS, multi-server switcher, dan kualitas HD di SMILEORA by SMILEON." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/smileora-mark.svg" />
   <link rel="stylesheet" type="text/css" href="assets/css/theme.css" />
+  <!-- HLS.js CDN for Universal Adaptive Streaming -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.8/hls.min.js"></script>
   <style>
-    /* Styling Khusus Halaman Player / Nonton */
     .watch-container {
       display: grid;
       grid-template-columns: 1fr 340px;
@@ -30,6 +31,7 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       background: #000;
+      overflow: hidden;
     }
 
     .video-viewport iframe,
@@ -77,13 +79,12 @@
     }
 
     .btn-server.active {
-      background: var(--color-primary);
+      background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
       border-color: var(--color-primary);
       color: #fff;
       box-shadow: var(--shadow-glow);
     }
 
-    /* Episode Selector Sidebar */
     .episode-panel {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
@@ -119,16 +120,16 @@
 
     .btn-ep:hover {
       border-color: var(--color-primary);
-      color: var(--color-primary-hover);
+      color: var(--color-primary);
     }
 
     .btn-ep.active {
-      background: var(--color-primary);
+      background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
       border-color: var(--color-primary);
       color: #fff;
+      box-shadow: var(--shadow-glow);
     }
 
-    /* Cinema Mode Overlay */
     body.cinema-mode-active {
       background: #000 !important;
     }
@@ -136,9 +137,9 @@
     body.cinema-mode-active .site-footer,
     body.cinema-mode-active .episode-panel,
     body.cinema-mode-active .watch-info-section {
-      opacity: 0.15;
+      opacity: 0.12;
       pointer-events: none;
-      filter: blur(2px);
+      filter: blur(3px);
       transition: all 0.3s ease;
     }
 
@@ -156,11 +157,11 @@
   <!-- Header Navigasi -->
   <header class="site-header">
     <div class="app-container">
-      <nav class="nav-bar" aria-label="Navigasi Utama">
-        <a class="nav-brand" href="index.html" aria-label="Beranda Aniwave">
+      <nav class="nav-bar" aria-label="Navigasi Player SMILEORA">
+        <a class="nav-brand" href="index.html" aria-label="Beranda SMILEORA">
           <span class="nav-brand-badge">
-            <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" aria-hidden="true" />
-            <span>Aniwave</span>
+            <img class="nav-brand-logo" src="assets/img/smileora-mark.svg" alt="SMILEORA" />
+            <span class="nav-brand-text">SMILEORA</span>
           </span>
         </a>
 
@@ -185,35 +186,31 @@
 
   <!-- Konten Player Utama -->
   <main class="app-container">
-    <!-- Judul & Breadcrumb -->
     <div style="margin-top:var(--space-md); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
       <div>
         <h1 id="watch-anime-title" style="font-size:1.5rem; font-weight:900;">Memuat player...</h1>
         <p id="watch-ep-subtitle" style="font-size:0.9rem; color:var(--color-primary); font-weight:700;">Episode 1</p>
       </div>
 
-      <!-- Tombol Next / Prev Episode -->
       <div style="display:flex; gap:8px;">
         <button id="btn-prev-ep" class="btn-secondary" type="button" style="font-size:0.85rem;">&larr; Ep Sebelumnya</button>
         <button id="btn-next-ep" class="btn-secondary" type="button" style="font-size:0.85rem;">Ep Selanjutnya &rarr;</button>
       </div>
     </div>
 
-    <!-- Layout Grid: Video Player + Episode Selector -->
+    <!-- Layout Grid -->
     <div class="watch-container">
-      <!-- Sisi Kiri: Video & Server Selector -->
+      <!-- Player & Server Switcher -->
       <div>
         <div class="player-card">
-          <div class="video-viewport">
-            <iframe id="video-frame" src="" allowfullscreen title="Aniwave Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+          <div id="player-viewport" class="video-viewport">
+            <!-- Dimuat oleh streamingEngine.js (HLS/Video/Iframe) -->
           </div>
 
           <div class="player-toolbar">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:0.8rem; font-weight:700; color:var(--color-text-muted);">PILIH SERVER:</span>
-              <div id="server-btn-container" class="server-list">
-                <!-- Diisi JS -->
-              </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-size:0.75rem; font-weight:800; color:var(--color-text-muted); letter-spacing:0.04em;">SERVER STREAMING:</span>
+              <div id="server-btn-container" class="server-list"></div>
             </div>
 
             <div style="display:flex; gap:8px;">
@@ -222,11 +219,11 @@
           </div>
         </div>
 
-        <!-- Info Sinopsis & Detail Tambahan -->
+        <!-- Info Sinopsis & Detail -->
         <div class="watch-info-section" style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:var(--space-md); margin-top:var(--space-md);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <h3 style="font-size:1.1rem; font-weight:800;">Tentang Episode Ini</h3>
-            <span id="watch-meta-score" style="color:#facc15; font-weight:800; font-size:0.9rem;">★ —</span>
+            <h3 style="font-size:1.1rem; font-weight:800;">Sinopsis Episode</h3>
+            <span id="watch-meta-score" style="color:#FACC15; font-weight:800; font-size:0.9rem;">★ —</span>
           </div>
           <p id="watch-synopsis" style="color:var(--color-text-muted); font-size:0.9rem; line-height:1.6;"></p>
         </div>
@@ -239,9 +236,7 @@
           <span id="ep-count-badge" style="font-size:0.75rem; background:var(--color-bg-secondary); padding:2px 8px; border-radius:var(--radius-sm); color:var(--color-text-muted);">0 Ep</span>
         </div>
 
-        <div id="episode-grid" class="episode-grid">
-          <!-- Tombol episode dirender lewat JS -->
-        </div>
+        <div id="episode-grid" class="episode-grid"></div>
       </aside>
     </div>
   </main>
@@ -250,8 +245,8 @@
   <footer class="site-footer">
     <div class="app-container">
       <div class="footer-bottom">
-        <span>&copy; 2026 Aniwave by TzRIO. Platform Streaming & Panduan Nonton Anime.</span>
-        <a href="index.html" style="color:var(--color-primary); font-weight:700;">&larr; Kembali ke Katalog</a>
+        <span>&copy; 2026 SMILEORA by SMILEON. Where Stories Create Smiles.</span>
+        <a href="index.html" style="color:var(--color-primary); font-weight:700;">&larr; Kembali ke Beranda</a>
       </div>
     </div>
   </footer>

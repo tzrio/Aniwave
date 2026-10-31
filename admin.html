@@ -3,24 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Dashboard — Aniwave</title>
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <title>SMILEORA Studio — Admin Content Management</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/smileora-mark.svg" />
   <link rel="stylesheet" type="text/css" href="assets/css/theme.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <!-- Header -->
+  <!-- Header Admin SMILEORA -->
   <header class="site-header">
     <div class="app-container">
       <nav class="nav-bar">
         <a class="nav-brand" href="index.html">
           <span class="nav-brand-badge">
-            <img class="nav-brand-logo" src="assets/img/aniwave-mark.svg" alt="" />
-            <span>Aniwave Admin</span>
+            <img class="nav-brand-logo" src="assets/img/smileora-mark.svg" alt="SMILEORA" />
+            <span class="nav-brand-text">SMILEORA Studio</span>
           </span>
         </a>
 
         <div class="nav-links">
-          <a class="nav-link" href="index.html">Lihat Website</a>
+          <a class="nav-link" href="index.html">Lihat Live Website</a>
         </div>
 
         <div class="nav-actions">
@@ -41,12 +42,12 @@
   <main class="app-container" style="padding-top: var(--space-xl); padding-bottom: var(--space-2xl);">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-lg); flex-wrap:wrap; gap:16px;">
       <div>
-        <h1 style="font-size:1.8rem; font-weight:900;">Manajemen Katalog Anime</h1>
-        <p style="color:var(--color-text-muted); font-size:0.9rem;">Tambah, perbarui metadata, ekspor, dan kelola basis data anime secara langsung.</p>
+        <h1 style="font-size:1.8rem; font-weight:900;">Manajemen Katalog SMILEORA</h1>
+        <p style="color:var(--color-text-muted); font-size:0.9rem;">Kelola anime, musim, multi-server streaming episode, dan sinkronisasi cloud Firestore (smileora-tzrio).</p>
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button id="btn-sync-mal" class="btn-secondary" type="button" style="border-color:#3b82f6; color:#3b82f6;">⚡ Auto-Sync MAL (Jikan)</button>
-        <button id="btn-sync-firebase" class="btn-secondary" type="button" style="border-color:#f59e0b; color:#f59e0b;">☁️ Upload Semua ke Firebase</button>
+        <button id="btn-sync-mal" class="btn-secondary" type="button" style="border-color:#3B82F6; color:#3B82F6;">⚡ Auto-Sync Jikan / MAL</button>
+        <button id="btn-sync-firebase" class="btn-secondary" type="button" style="border-color:var(--color-primary); color:var(--color-primary);">☁️ Sync ke Firestore Cloud</button>
         <button id="btn-export-json" class="btn-secondary" type="button">⬇ Ekspor JSON</button>
         <button id="btn-import-json" class="btn-secondary" type="button">⬆ Impor JSON</button>
         <button id="btn-new-anime" class="btn-primary" type="button">+ Tambah Anime Baru</button>
@@ -64,12 +65,12 @@
         <div id="stat-series" style="font-size:1.8rem; font-weight:900; color:var(--color-text-main); margin-top:4px;">0</div>
       </div>
       <div style="background:var(--color-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--color-border);">
-        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">FILM / MOVIE</span>
+        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">FILM LAYAR LEBAR</span>
         <div id="stat-movies" style="font-size:1.8rem; font-weight:900; color:var(--color-text-main); margin-top:4px;">0</div>
       </div>
       <div style="background:var(--color-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--color-border);">
-        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">STATUS SISTEM</span>
-        <div style="font-size:1.1rem; font-weight:800; color:var(--color-success); margin-top:8px;">● Operational Ready</div>
+        <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:700;">CLOUD DATABASE</span>
+        <div style="font-size:1.1rem; font-weight:800; color:var(--color-success); margin-top:8px;">● Firestore Connected</div>
       </div>
     </div>
 
@@ -88,7 +89,7 @@
         </thead>
         <tbody id="admin-anime-table">
           <tr>
-            <td colspan="6" style="padding:24px; text-align:center; color:var(--color-text-muted);">Memuat basis data...</td>
+            <td colspan="6" style="padding:24px; text-align:center; color:var(--color-text-muted);">Memuat basis data SMILEORA...</td>
           </tr>
         </tbody>
       </table>
@@ -101,13 +102,21 @@
       <button class="modal-close" id="anime-form-close">&times;</button>
       <h2 id="form-modal-title" style="font-size:1.4rem; font-weight:800; margin-bottom:16px;">Tambah / Edit Anime</h2>
 
-      <!-- Fitur Tarik Data Otomatis dari MyAnimeList (Jikan) -->
-      <div style="background:var(--color-bg-secondary); border:1px solid var(--color-border); padding:12px; border-radius:var(--radius-md); margin-bottom:16px; display:flex; gap:8px;">
-        <input type="text" id="mal-search-query" class="form-input" placeholder="Ketik judul anime dari MyAnimeList untuk auto-fill data..." style="flex:1;" />
-        <button type="button" id="btn-fetch-mal" class="btn-secondary" style="font-size:0.85rem; border-color:#3b82f6; color:#3b82f6;">⚡ Tarik Data</button>
+      <!-- Auto-Sync via Judul, ID, atau Link URL MyAnimeList -->
+      <div style="background:var(--color-bg-secondary); border:1px solid var(--color-border); padding:14px; border-radius:var(--radius-md); margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <label style="font-size:0.8rem; font-weight:700; color:var(--color-primary);">⚡ AUTO-SYNC CEPAT (Dukung Judul, ID, atau Link URL MyAnimeList):</label>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="mal-search-query" class="form-input" placeholder="Tempel Link URL MAL (mis. https://myanimelist.net/anime/52991) atau Ketik Judul..." style="flex:1;" />
+          <button type="button" id="btn-fetch-mal" class="btn-primary" style="font-size:0.85rem; padding:8px 18px;">⚡ Tarik Data</button>
+        </div>
+        <!-- Dropdown hasil pencarian jika ditemukan banyak pilihan -->
+        <div id="mal-search-results" style="display:none; margin-top:10px; max-height:180px; overflow-y:auto; border-radius:var(--radius-sm); border:1px solid var(--color-border); background:var(--color-surface);"></div>
       </div>
 
       <form id="anime-record-form">
+        <input type="hidden" id="form-editing-old-id" value="" />
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
           <div class="form-group">
             <label class="form-label" for="form-id">ID Slug (Unik, mis. drs-s1)</label>
@@ -121,10 +130,10 @@
 
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
           <div class="form-group">
-            <label class="form-label" for="form-type">Format / Tipe</label>
+            <label class="form-label" for="form-type">Format</label>
             <select class="form-input" id="form-type">
-              <option value="Serial">Serial</option>
-              <option value="Film">Film</option>
+              <option value="Serial">Serial TV</option>
+              <option value="Film">Film Layar Lebar</option>
             </select>
           </div>
           <div class="form-group">
@@ -146,18 +155,18 @@
             <label class="form-label" for="form-status">Status Penayangan</label>
             <select class="form-input" id="form-status">
               <option value="finished">Tamat</option>
-              <option value="ongoing">Sedang berlangsung</option>
+              <option value="ongoing">Sedang tayang</option>
             </select>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="form-cover">Path Poster Gambar (mis. assets/img/nama.jpg)</label>
+          <label class="form-label" for="form-cover">Path Poster Gambar (URL atau assets/img/nama.jpg)</label>
           <input class="form-input" id="form-cover" type="text" />
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="form-trailer">Embed URL Trailer YouTube (mis. https://www.youtube.com/embed/...)</label>
+          <label class="form-label" for="form-trailer">Embed URL Trailer YouTube</label>
           <input class="form-input" id="form-trailer" type="url" />
         </div>
 
@@ -167,13 +176,13 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="form-synopsis">Sinopsis Lengkap</label>
+          <label class="form-label" for="form-synopsis">Sinopsis Cerita</label>
           <textarea class="form-input" id="form-synopsis" rows="4"></textarea>
         </div>
 
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
           <button type="button" class="btn-secondary" id="form-cancel">Batal</button>
-          <button type="submit" class="btn-primary">Simpan Anime</button>
+          <button type="submit" class="btn-primary">Simpan ke SMILEORA</button>
         </div>
       </form>
     </div>
